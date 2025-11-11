@@ -1,5 +1,6 @@
 package com.codeplace.postsandroidapp.feature_settings.presentation.theme
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -70,6 +71,9 @@ fun ThemeScreen(
 
     Column {
         ListItem(
+            modifier = Modifier.clickable{
+                onItemClick(AppTheme.LIGHT_MODE)
+            },
             headlineContent = {
                 Text(stringResource(R.string.light))
             },
@@ -77,12 +81,14 @@ fun ThemeScreen(
                 RadioButton(
                     selected = appTheme == AppTheme.LIGHT_MODE,
                     onClick = {
-                        onItemClick(AppTheme.LIGHT_MODE)
                     },
                 )
             },
         )
         ListItem(
+            modifier = Modifier.clickable{
+                onItemClick(AppTheme.DARK_MODE)
+            },
             headlineContent = {
                 Text(stringResource(R.string.dark))
             },
@@ -90,12 +96,14 @@ fun ThemeScreen(
                 RadioButton(
                     selected = appTheme == AppTheme.DARK_MODE,
                     onClick = {
-                        onItemClick(AppTheme.DARK_MODE)
-                    },
+                     },
                 )
             },
         )
         ListItem(
+            modifier = Modifier.clickable{
+                onItemClick(AppTheme.SYSTEM_MODE)
+            },
             headlineContent = {
                 Text(stringResource(R.string.system))
             },
@@ -103,7 +111,6 @@ fun ThemeScreen(
                 RadioButton(
                     selected = appTheme == AppTheme.SYSTEM_MODE,
                     onClick = {
-                        onItemClick(AppTheme.SYSTEM_MODE)
                     },
                 )
             },
