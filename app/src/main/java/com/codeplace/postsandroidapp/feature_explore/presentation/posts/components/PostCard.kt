@@ -1,7 +1,6 @@
 package com.codeplace.postsandroidapp.feature_explore.presentation.posts.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.codeplace.postsandroidapp.R
 import com.codeplace.postsandroidapp.core.presentation.theme.SpacingSize
 import com.codeplace.postsandroidapp.feature_explore.domain.model.Post
-import com.example.compose.AppTheme
+import com.example.compose.PostsAndroidAppTheme
 
 @Composable
 fun PostCard(
@@ -114,7 +113,7 @@ fun PostCard(
 @Preview
 @Composable
 fun PosdCardPreview() {
-    AppTheme {
+    PostsAndroidAppTheme {
 
     }
 

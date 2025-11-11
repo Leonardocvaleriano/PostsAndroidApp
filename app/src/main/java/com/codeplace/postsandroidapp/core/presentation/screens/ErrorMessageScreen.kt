@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.codeplace.postsandroidapp.R
 import com.codeplace.postsandroidapp.core.presentation.theme.SpacingSize
-import com.example.compose.AppTheme
+import com.example.compose.PostsAndroidAppTheme
 
 
 @Composable
@@ -42,7 +42,7 @@ fun ErrorMessageText(
 @Preview(showBackground = true)
 @Composable
 fun ErrorMessageScreenPreview() {
-    AppTheme {
+    PostsAndroidAppTheme {
         ErrorMessageText("Error teste")
 
     }

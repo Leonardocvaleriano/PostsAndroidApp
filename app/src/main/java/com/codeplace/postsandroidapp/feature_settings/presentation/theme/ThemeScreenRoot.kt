@@ -1,25 +1,45 @@
 package com.codeplace.postsandroidapp.feature_settings.presentation.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.codeplace.postsandroidapp.R
+import com.codeplace.postsandroidapp.core.presentation.ThemeViewModel
 import com.codeplace.postsandroidapp.core.presentation.components.TopAppBarBackArrow
-import com.codeplace.postsandroidapp.core.presentation.theme.SpacingSize
-import com.codeplace.postsandroidapp.feature_settings.presentation.theme.components.RadioGroup
-import com.codeplace.postsandroidapp.feature_settings.presentation.theme.util.AppTheme
-import com.codeplace.postsandroidapp.feature_settings.presentation.theme.util.RadioButtonItem
+import com.codeplace.postsandroidapp.feature_settings.presentation.domain.AppTheme
+import com.example.compose.PostsAndroidAppTheme
+
+
+@Preview(showBackground = true)
+@Composable
+
+fun ThemeScreenPreview() {
+    PostsAndroidAppTheme {
+        ThemeScreen(
+            appTheme = AppTheme.LIGHT_MODE,
+            onItemClick = { }
+        )
+    }
+}
+
 
 @Composable
 fun ThemeScreenRoot(
-    modifier: Modifier = Modifier,
-    selectedTheme: AppTheme,
-    onItemSelected: (AppTheme) -> Unit,
+    themeViewModel: ThemeViewModel,
 ) {
+    val appThemeUiState by themeViewModel.currentAppTheme.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -28,61 +48,69 @@ fun ThemeScreenRoot(
     ) { innerPadding ->
 
         Column(modifier = Modifier.padding(innerPadding)) {
+                ThemeScreen(
+                    appTheme = appThemeUiState,
+                    onItemClick = { currentAppTheme ->
+                        themeViewModel.changeAppTheme(currentAppTheme)
 
-            ThemeScreen(
-                selectedTheme = selectedTheme,
-                onItemSelected = onItemSelected)
+                    }
+                )
+
+            }
         }
-
-    }
 }
 
 
 @Composable
 fun ThemeScreen(
-    selectedTheme: AppTheme,
-    onItemSelected: (AppTheme) -> Unit,
+    appTheme: AppTheme?,
+    onItemClick: (AppTheme) -> Unit
 ) {
 
 
-    val themeItems = listOf(
-        RadioButtonItem(
-            id = AppTheme.LIGHT_MODE.ordinal,
-            title = stringResource(R.string.theme_list_item_light)
-        ),
-        RadioButtonItem(
-            id = AppTheme.DARK_MODE.ordinal,
-            title = stringResource(R.string.theme_list_item_dark)
-        ),
-        RadioButtonItem(
-            id = AppTheme.SYSTEM_MODE.ordinal,
-            title = stringResource(R.string.theme_list_item_System),
-            supportText = stringResource(R.string.theme_list_item_System_support)
+    Column {
+        ListItem(
+            headlineContent = {
+                Text(stringResource(R.string.light))
+            },
+            trailingContent = {
+                RadioButton(
+                    selected = appTheme == AppTheme.LIGHT_MODE,
+                    onClick = {
+                        onItemClick(AppTheme.LIGHT_MODE)
+                    },
+                )
+            },
         )
-    )
-
-
-    Column(modifier = Modifier.padding(horizontal = SpacingSize.large)) {
-
-        RadioGroup(
-            items = themeItems,
-            selected = selectedTheme.ordinal,
-            onItemSelect = {
-                onItemSelected(AppTheme.fromOrdinal(it))
-            }
+        ListItem(
+            headlineContent = {
+                Text(stringResource(R.string.dark))
+            },
+            trailingContent = {
+                RadioButton(
+                    selected = appTheme == AppTheme.DARK_MODE,
+                    onClick = {
+                        onItemClick(AppTheme.DARK_MODE)
+                    },
+                )
+            },
         )
-
-
+        ListItem(
+            headlineContent = {
+                Text(stringResource(R.string.system))
+            },
+            trailingContent = {
+                RadioButton(
+                    selected = appTheme == AppTheme.SYSTEM_MODE,
+                    onClick = {
+                        onItemClick(AppTheme.SYSTEM_MODE)
+                    },
+                )
+            },
+        )
     }
-
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-
-fun ThemeScreenPreview() {
-   // ThemeScreen()
-}
 
 
 

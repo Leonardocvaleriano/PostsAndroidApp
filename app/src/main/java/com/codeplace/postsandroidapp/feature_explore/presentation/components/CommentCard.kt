@@ -1,6 +1,5 @@
 package com.codeplace.postsandroidapp.feature_explore.presentation.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.codeplace.postsandroidapp.core.presentation.theme.CornerRadiusSize
 import com.codeplace.postsandroidapp.core.presentation.theme.SpacingSize
-import com.example.compose.AppTheme
+import com.example.compose.PostsAndroidAppTheme
 
 @Composable
 fun CommentCard(
@@ -68,7 +67,7 @@ fun CommentCard(
 @Preview(showBackground = true)
 @Composable
 fun CommentsCardPreview() {
-    AppTheme {
+    PostsAndroidAppTheme {
         CommentCard(
             name = "Lorem ipsum dolor sit amet consectetur",
             email = "ikita@garfield.biz",

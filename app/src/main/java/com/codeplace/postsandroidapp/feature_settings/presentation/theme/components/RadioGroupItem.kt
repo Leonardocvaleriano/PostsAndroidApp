@@ -19,7 +19,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.codeplace.postsandroidapp.core.presentation.theme.SpacingSize
-import com.codeplace.postsandroidapp.feature_settings.presentation.theme.util.RadioButtonItem
+import com.codeplace.postsandroidapp.feature_settings.presentation.theme.components.RadioButtonItem
 
 @Composable
 fun RadioGroupItem(

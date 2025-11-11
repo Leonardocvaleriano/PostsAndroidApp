@@ -8,7 +8,7 @@
     <string name="theme_settings_item">Theme</string>
     <string name="share_settings_item">Share</string>
     <string name="logout_settings_item">Logout</string>
-    <string name="light_mode_settings_item">Light mode</string>
+    <string name="light">Light mode</string>
     <string name="profile_content_description">Profile Image</string>
     <string name="top_bar_title_posts">Posts</string>
     <string name="top_bar_title_favorites">Favorites</string>
@@ -17,8 +17,8 @@
     <string name="edit_icon_text">Edit</string>
     <string name="top_bar_title_theme">Theme</string>
     <string name="theme_list_item_light">Light</string>
-    <string name="theme_list_item_dark">Dark</string>
-    <string name="theme_list_item_System">System</string>
+    <string name="dark">Dark</string>
+    <string name="system">System</string>
     <string name="theme_list_item_System_support">The app theme will automatically match the theme set on your device.</string>
     <string name="title_oops_something_went_wrong">Oops, something went wrong!</string>
     <string name="button_retry">Retry</string>
