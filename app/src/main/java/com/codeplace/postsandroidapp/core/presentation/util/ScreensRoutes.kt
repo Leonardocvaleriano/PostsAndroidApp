@@ -1,31 +1,26 @@
 package com.codeplace.postsandroidapp.core.presentation.util
 
 import kotlinx.serialization.Serializable
-
 @Serializable
-sealed class ScreenRoutes() {
+sealed interface ScreenRoutes {
 
     @Serializable
-    data object HomeGraph : ScreenRoutes()
+    data object HomeGraph : ScreenRoutes
 
     @Serializable
-    data object Explore : ScreenRoutes()
+    data object Explore : ScreenRoutes
 
     @Serializable
-    data class Comments(val postId: Int) : ScreenRoutes()
+    data object Favorites : ScreenRoutes
 
     @Serializable
-    data object Search : ScreenRoutes()
+    data class Comments(val postId: Int) : ScreenRoutes
 
     @Serializable
-    data object Favorites : ScreenRoutes()
+    data object Settings : ScreenRoutes
 
     @Serializable
-    data object Settings : ScreenRoutes()
-
-    @Serializable
-    data object Theme: ScreenRoutes()
-
+    data object Theme: ScreenRoutes
 
 }
 

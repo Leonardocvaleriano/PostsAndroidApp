@@ -1,4 +1,4 @@
-package com.codeplace.postsandroidapp.feature_settings.presentation.domain
+package com.codeplace.postsandroidapp.feature_settings.domain
 
 enum class AppTheme {
     LIGHT_MODE,

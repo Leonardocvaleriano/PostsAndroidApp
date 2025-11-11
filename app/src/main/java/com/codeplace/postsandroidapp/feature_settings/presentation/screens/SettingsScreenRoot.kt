@@ -1,4 +1,4 @@
-package com.codeplace.postsandroidapp.feature_settings.presentation
+package com.codeplace.postsandroidapp.feature_settings.presentation.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

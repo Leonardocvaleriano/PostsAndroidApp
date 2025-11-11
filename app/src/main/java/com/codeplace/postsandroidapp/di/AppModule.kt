@@ -1,6 +1,9 @@
 package com.codeplace.postsandroidapp.di
 
+import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.Stable
+import com.codeplace.postsandroidapp.PostsAndroidApp
 import com.codeplace.postsandroidapp.feature_explore.data.repository.PostsRepositoryImpl
 import com.codeplace.postsandroidapp.feature_explore.domain.repository.PostsRepository
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetCommentsByPostIdUseCase
@@ -11,6 +14,7 @@ import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostUseC
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -26,6 +30,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Stable
+    @Singleton
+    @Provides
+    fun provideApplication(@ApplicationContext app: Context): PostsAndroidApp {
+        return app as PostsAndroidApp
+    }
 
     @Provides
     @Singleton
@@ -71,4 +82,7 @@ object AppModule {
             getCommentsByPostIdUseCase = GetCommentsByPostIdUseCase(repository)
         )
     }
+
+
+
 }

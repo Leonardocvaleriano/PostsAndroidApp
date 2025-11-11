@@ -1,25 +1,18 @@
-package com.codeplace.postsandroidapp.feature_settings.presentation.theme
+package com.codeplace.postsandroidapp.feature_settings.presentation.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.codeplace.postsandroidapp.R
-import com.codeplace.postsandroidapp.core.presentation.ThemeViewModel
+import com.codeplace.postsandroidapp.feature_settings.presentation.SettingsViewModel
 import com.codeplace.postsandroidapp.core.presentation.components.TopAppBarBackArrow
-import com.codeplace.postsandroidapp.feature_settings.presentation.domain.AppTheme
+import com.codeplace.postsandroidapp.feature_settings.domain.AppTheme
 import com.example.compose.PostsAndroidAppTheme
 
 
@@ -29,7 +22,7 @@ import com.example.compose.PostsAndroidAppTheme
 fun ThemeScreenPreview() {
     PostsAndroidAppTheme {
         ThemeScreen(
-            appTheme = AppTheme.LIGHT_MODE,
+            currentAppTheme = AppTheme.LIGHT_MODE,
             onItemClick = { }
         )
     }
@@ -38,38 +31,32 @@ fun ThemeScreenPreview() {
 
 @Composable
 fun ThemeScreenRoot(
-    themeViewModel: ThemeViewModel,
+    settingsViewModel: SettingsViewModel,
+    currentAppTheme: AppTheme?
+
 ) {
-    val appThemeUiState by themeViewModel.currentAppTheme.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            TopAppBarBackArrow(title = stringResource(R.string.top_bar_title_theme))
-        }
-    ) { innerPadding ->
-
-        Column(modifier = Modifier.padding(innerPadding)) {
-                ThemeScreen(
-                    appTheme = appThemeUiState,
+        Column {
+            ThemeScreen(
+                    currentAppTheme = currentAppTheme,
                     onItemClick = { currentAppTheme ->
-                        themeViewModel.changeAppTheme(currentAppTheme)
+                        settingsViewModel.changeAppTheme(currentAppTheme)
 
                     }
                 )
 
             }
         }
-}
 
 
 @Composable
 fun ThemeScreen(
-    appTheme: AppTheme?,
+    currentAppTheme: AppTheme?,
     onItemClick: (AppTheme) -> Unit
 ) {
 
-
     Column {
+        TopAppBarBackArrow(title = stringResource(R.string.top_bar_title_theme))
         ListItem(
             modifier = Modifier.clickable{
                 onItemClick(AppTheme.LIGHT_MODE)
@@ -79,8 +66,10 @@ fun ThemeScreen(
             },
             trailingContent = {
                 RadioButton(
-                    selected = appTheme == AppTheme.LIGHT_MODE,
+                    selected = currentAppTheme == AppTheme.LIGHT_MODE,
                     onClick = {
+                        onItemClick(AppTheme.LIGHT_MODE)
+
                     },
                 )
             },
@@ -94,9 +83,11 @@ fun ThemeScreen(
             },
             trailingContent = {
                 RadioButton(
-                    selected = appTheme == AppTheme.DARK_MODE,
+                    selected = currentAppTheme == AppTheme.DARK_MODE,
                     onClick = {
-                     },
+                        onItemClick(AppTheme.DARK_MODE)
+
+                    },
                 )
             },
         )
@@ -109,8 +100,9 @@ fun ThemeScreen(
             },
             trailingContent = {
                 RadioButton(
-                    selected = appTheme == AppTheme.SYSTEM_MODE,
+                    selected = currentAppTheme == AppTheme.SYSTEM_MODE,
                     onClick = {
+                        onItemClick(AppTheme.SYSTEM_MODE)
                     },
                 )
             },

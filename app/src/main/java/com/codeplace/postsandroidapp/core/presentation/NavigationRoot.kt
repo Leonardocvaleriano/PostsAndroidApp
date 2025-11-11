@@ -9,48 +9,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.*
 import androidx.navigation.toRoute
-import com.codeplace.postsandroidapp.core.presentation.components.StandardBottomAppBar
-import com.codeplace.postsandroidapp.core.presentation.util.BottomNavigation
+import com.codeplace.postsandroidapp.core.presentation.components.DefaultBottomAppBar
 import com.codeplace.postsandroidapp.core.presentation.util.ScreenRoutes
 import com.codeplace.postsandroidapp.feature_explore.presentation.comments.CommentsScreenRoot
 import com.codeplace.postsandroidapp.feature_explore.presentation.posts.ExplorePostsScreenRoot
-import com.codeplace.postsandroidapp.feature_explore.presentation.search.SearchScreenRoot
+import com.codeplace.postsandroidapp.feature_explore.presentation.posts.ExplorePostsViewModel
 import com.codeplace.postsandroidapp.feature_favorites.presentation.FavoritesScreenRoot
-import com.codeplace.postsandroidapp.feature_settings.presentation.SettingsScreenRoot
-import com.codeplace.postsandroidapp.feature_settings.presentation.theme.ThemeScreenRoot
+import com.codeplace.postsandroidapp.feature_settings.presentation.SettingsViewModel
+import com.codeplace.postsandroidapp.feature_settings.presentation.screens.SettingsScreenRoot
+import com.codeplace.postsandroidapp.feature_settings.presentation.screens.ThemeScreenRoot
 
 
 @Composable
-fun NavigationRoot(
-    themeViewModel: ThemeViewModel
-
-) {
-
-
+fun NavigationRoot() {
     val navController = rememberNavController()
+
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
         contentWindowInsets = WindowInsets(0.dp),
         bottomBar = {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
-                ?: BottomNavigation.EXPLORE.route::class.qualifiedName.orEmpty()
-
-            val isBottomAppBarVisible = when (currentRoute) {
-                BottomNavigation.EXPLORE.route::class.qualifiedName.orEmpty(),
-                BottomNavigation.FAVORITES.route::class.qualifiedName.orEmpty(),
-                BottomNavigation.SETTINGS.route::class.qualifiedName.orEmpty(),
-                    -> true
-
-                else -> false
-            }
-            StandardBottomAppBar(
-                isBottomAppBarVisible = isBottomAppBarVisible,
+            DefaultBottomAppBar(
+                isBottomAppBarVisible = true,
                 navController = navController
             )
 
@@ -65,8 +49,12 @@ fun NavigationRoot(
             navigation<ScreenRoutes.HomeGraph>(
                 startDestination = ScreenRoutes.Explore
             ) {
+
                 composable<ScreenRoutes.Explore> {
+                    val explorePostsViewModel: ExplorePostsViewModel = hiltViewModel()
+
                     ExplorePostsScreenRoot(
+                        explorePostsViewModel = explorePostsViewModel,
                         onCardClick = { postId ->
                             navController.navigate(ScreenRoutes.Comments(postId = postId))
                         }
@@ -82,9 +70,6 @@ fun NavigationRoot(
                         }
                     )
                 }
-                composable<ScreenRoutes.Search> {
-                    SearchScreenRoot()
-                }
 
                 composable<ScreenRoutes.Favorites> {
                     FavoritesScreenRoot()
@@ -98,8 +83,12 @@ fun NavigationRoot(
                     )
                 }
                 composable<ScreenRoutes.Theme> {
+                    val settingsViewModel: SettingsViewModel = hiltViewModel()
+                    val appThemeUiState by settingsViewModel.appTheme.collectAsStateWithLifecycle()
+
                     ThemeScreenRoot(
-                        themeViewModel = themeViewModel
+                        settingsViewModel = settingsViewModel,
+                        currentAppTheme = appThemeUiState
                     )
                 }
 

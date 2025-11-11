@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarDefault(
+fun DefaultTopAppBar(
     modifier: Modifier = Modifier,
     title: String? = "",
     onSearchIconClick: () -> Unit = {},
@@ -60,7 +60,7 @@ fun TopAppBarDefault(
 @Composable
 
 fun TopAppBarSmallProfilePreview() {
-    TopAppBarDefault(
+    DefaultTopAppBar(
         title = "Post"
     )
 }

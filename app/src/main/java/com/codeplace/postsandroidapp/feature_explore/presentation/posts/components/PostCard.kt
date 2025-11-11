@@ -31,17 +31,16 @@ fun PostCard(
     post: Post,
     onCardClick: (postId: Int) -> Unit,
     containCommentCount: Int? = 0,
-    containEffectOnClick: Boolean = true
 ) {
 
     val interactionSource = remember { MutableInteractionSource() }
+
     Card(
         modifier = modifier
             .padding()
             .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,
-                indication = if (containEffectOnClick) rememberRipple() else null
             ) {
                 onCardClick(post.id)
             }
