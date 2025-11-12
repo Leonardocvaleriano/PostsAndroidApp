@@ -27,6 +27,11 @@
     <string name="bottom_navigation_label_settings">Settings</string>
     <string name="top_bar_title_explore">Explore</string>
     <string name="body_text_no_comments">No comments registered yet!</string>
-    <string name="body_an_unexpected_error_has_occurred">An unexpected error has occurred</string>
+
+    <string name="an_unexpected_error_has_occurred">An unexpected error has occurred</string>
+    <string name="io_error">A network or file error occurred. Please check your connection and try again.</string>
+    <string name="corruption_error">Data corruption detected. Please restart the app or clear app data.</string>
+    <string name="key_not_found">Required data could not be found. Please try again later.</string>
+    <string name="unknown_error">An unknown error occurred. Please try again.</string>
 
 </resources>

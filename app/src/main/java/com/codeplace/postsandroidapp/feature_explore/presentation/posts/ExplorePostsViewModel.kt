@@ -2,9 +2,8 @@ package com.codeplace.postsandroidapp.feature_explore.presentation.posts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.codeplace.postsandroidapp.core.util.onError
-import com.codeplace.postsandroidapp.core.util.onSuccess
-import com.codeplace.postsandroidapp.feature_explore.domain.model.Comment
+import com.codeplace.postsandroidapp.core.domain.onError
+import com.codeplace.postsandroidapp.core.domain.onSuccess
 import com.codeplace.postsandroidapp.feature_explore.domain.model.Post
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

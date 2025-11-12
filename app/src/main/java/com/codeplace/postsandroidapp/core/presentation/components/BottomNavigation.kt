@@ -1,7 +1,6 @@
 package com.codeplace.postsandroidapp.core.presentation.components
 
 
-import android.graphics.drawable.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
@@ -9,11 +8,9 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.BottomAppBarDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.codeplace.postsandroidapp.R
-import com.codeplace.postsandroidapp.core.presentation.util.ScreenRoutes
+import com.codeplace.postsandroidapp.core.presentation.navigation.ScreenRoutes
 
 enum class BottomNavigation(
     val label: Int,

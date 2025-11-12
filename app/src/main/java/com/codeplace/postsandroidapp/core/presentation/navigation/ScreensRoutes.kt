@@ -1,4 +1,4 @@
-package com.codeplace.postsandroidapp.core.presentation.util
+package com.codeplace.postsandroidapp.core.presentation.navigation
 
 import kotlinx.serialization.Serializable
 @Serializable

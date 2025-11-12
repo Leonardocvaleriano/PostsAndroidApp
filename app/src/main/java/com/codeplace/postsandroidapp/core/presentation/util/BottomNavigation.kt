@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.codeplace.postsandroidapp.R
+import com.codeplace.postsandroidapp.core.presentation.navigation.ScreenRoutes
 
 enum class BottomNavigation(
     val label: Int,

@@ -1,4 +1,4 @@
-package com.codeplace.postsandroidapp.core.presentation
+package com.codeplace.postsandroidapp.core.presentation.navigation
 
 
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,7 +14,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.*
 import androidx.navigation.toRoute
 import com.codeplace.postsandroidapp.core.presentation.components.DefaultBottomAppBar
-import com.codeplace.postsandroidapp.core.presentation.util.ScreenRoutes
 import com.codeplace.postsandroidapp.feature_explore.presentation.comments.CommentsScreenRoot
 import com.codeplace.postsandroidapp.feature_explore.presentation.posts.ExplorePostsScreenRoot
 import com.codeplace.postsandroidapp.feature_explore.presentation.posts.ExplorePostsViewModel

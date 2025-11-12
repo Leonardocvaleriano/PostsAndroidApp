@@ -1,4 +1,4 @@
-package com.codeplace.postsandroidapp.core.util
+package com.codeplace.postsandroidapp.core.domain
 
 enum class NetworkError : Error {
     REQUEST_TIMEOUT,
@@ -12,3 +12,4 @@ enum class NetworkError : Error {
     UNABLE_TO_CONNECT,
     UNKNOWN;
 }
+

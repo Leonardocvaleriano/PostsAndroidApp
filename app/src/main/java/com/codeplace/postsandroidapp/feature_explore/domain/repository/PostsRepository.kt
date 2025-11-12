@@ -1,7 +1,7 @@
 package com.codeplace.postsandroidapp.feature_explore.domain.repository
 
-import com.codeplace.postsandroidapp.core.util.NetworkError
-import com.codeplace.postsandroidapp.core.util.Result
+import com.codeplace.postsandroidapp.core.domain.NetworkError
+import com.codeplace.postsandroidapp.core.domain.Result
 import com.codeplace.postsandroidapp.feature_explore.domain.model.Comment
 import com.codeplace.postsandroidapp.feature_explore.domain.model.Post
 

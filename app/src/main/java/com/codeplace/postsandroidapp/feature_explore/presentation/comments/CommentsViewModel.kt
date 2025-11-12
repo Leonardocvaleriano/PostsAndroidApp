@@ -3,7 +3,7 @@ package com.codeplace.postsandroidapp.feature_explore.presentation.comments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.codeplace.postsandroidapp.core.util.Result
+import com.codeplace.postsandroidapp.core.domain.Result
 import com.codeplace.postsandroidapp.feature_explore.domain.model.Comment
 import com.codeplace.postsandroidapp.feature_explore.domain.model.Post
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetCommentsByPostIdUseCase

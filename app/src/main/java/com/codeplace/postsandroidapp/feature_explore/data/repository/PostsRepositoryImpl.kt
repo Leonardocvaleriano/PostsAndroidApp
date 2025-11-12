@@ -1,8 +1,8 @@
 package com.codeplace.postsandroidapp.feature_explore.data.repository
 
 import com.codeplace.postsandroidapp.feature_explore.data.remote.util.HttpRoutes
-import com.codeplace.postsandroidapp.core.util.NetworkError
-import com.codeplace.postsandroidapp.core.util.Result
+import com.codeplace.postsandroidapp.core.domain.NetworkError
+import com.codeplace.postsandroidapp.core.domain.Result
 import com.codeplace.postsandroidapp.feature_explore.data.remote.dto.CommentDto
 import com.codeplace.postsandroidapp.feature_explore.data.remote.dto.PostDto
 import com.codeplace.postsandroidapp.feature_explore.data.remote.mappers.toDomain
