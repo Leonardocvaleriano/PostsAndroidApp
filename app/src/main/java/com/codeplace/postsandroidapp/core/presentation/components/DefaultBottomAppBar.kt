@@ -22,7 +22,6 @@ import com.codeplace.postsandroidapp.core.presentation.util.BottomNavigation
 
 @Composable
 fun DefaultBottomAppBar(
-    isBottomAppBarVisible: Boolean,
     navController: NavController
 ) {
 
@@ -33,11 +32,6 @@ fun DefaultBottomAppBar(
         derivedStateOf { currentRoute.substringBefore("?") }
     }
 
-    AnimatedVisibility(
-        visible = isBottomAppBarVisible,
-        enter = slideInVertically(initialOffsetY = { it }),
-        exit = slideOutVertically(targetOffsetY = { it }),
-    ){
         BottomAppBar(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
             contentColor = MaterialTheme.colorScheme.secondaryContainer
@@ -77,17 +71,10 @@ fun DefaultBottomAppBar(
     }
 
 
-
-
-        }
-
-
-
 @Preview
 @Composable
 fun StandardBottomAppBarPreview() {
     DefaultBottomAppBar(
-        isBottomAppBarVisible = true,
         navController = NavController(LocalContext.current)
     )
 }

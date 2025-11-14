@@ -3,6 +3,8 @@ package com.codeplace.postsandroidapp.feature_settings.presentation.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.ModeNight
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -63,7 +65,7 @@ fun SettingsScreen(
             },
             leadingContent = {
                 Icon(
-                    Icons.Default.Settings,
+                    Icons.Default.LightMode,
                     contentDescription = null,
                 )
             },

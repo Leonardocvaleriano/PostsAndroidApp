@@ -1,5 +1,6 @@
 package com.codeplace.postsandroidapp.feature_explore.domain.di
 
+import com.codeplace.postsandroidapp.feature_explore.data.datasources.RemoteDataSource
 import com.codeplace.postsandroidapp.feature_explore.data.repository.PostsRepositoryImpl
 import com.codeplace.postsandroidapp.feature_explore.domain.repository.PostsRepository
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetCommentsByPostIdUseCase
@@ -18,13 +19,12 @@ object ExploreDomainModule {
     @Provides
     @Singleton
     fun provideExploreRepository(
-        api: HttpClient,
+        remoteDataSource: RemoteDataSource
     ): PostsRepository {
         return PostsRepositoryImpl(
-            api = api
+            remoteDataSource = remoteDataSource
         )
     }
-
 
     @Provides
     @Singleton

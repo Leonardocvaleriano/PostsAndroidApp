@@ -5,7 +5,4 @@ enum class AppTheme(val localStorageValue: String) {
     DARK_MODE(localStorageValue = "dark_mode"),
     SYSTEM_MODE(localStorageValue = "system_mode");
 
-    companion object {
-        fun fromOrdinal(ordinal: Int) = entries[ordinal]
-    }
 }

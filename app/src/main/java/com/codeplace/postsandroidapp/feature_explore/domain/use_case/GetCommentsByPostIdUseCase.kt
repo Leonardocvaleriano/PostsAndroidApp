@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetCommentsByPostIdUseCase @Inject constructor(
     val postRepository: PostsRepository
 ) {
-    suspend operator fun invoke(postId: Int) = postRepository.getCommentsByPostId(postId = postId)
+    suspend operator fun invoke(postId: Int) = postRepository.getComments(postId = postId)
 }

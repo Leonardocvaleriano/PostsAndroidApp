@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,13 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codeplace.postsandroidapp.R
-import com.codeplace.postsandroidapp.core.presentation.screens.ErrorMessageText
 import com.codeplace.postsandroidapp.core.presentation.components.TopAppBarBackArrow
+import com.codeplace.postsandroidapp.core.presentation.screens.ErrorMessageText
 import com.codeplace.postsandroidapp.core.presentation.theme.SpacingSize
-import com.codeplace.postsandroidapp.feature_explore.domain.model.Comment
-import com.codeplace.postsandroidapp.feature_explore.domain.model.Post
+import com.codeplace.postsandroidapp.feature_explore.domain.models.Comment
+import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.presentation.components.CommentCard
-import com.codeplace.postsandroidapp.feature_explore.presentation.posts.components.PostCard
+import com.codeplace.postsandroidapp.feature_explore.presentation.explore.components.PostCard
 import com.example.compose.PostsAndroidAppTheme
 
 
@@ -44,13 +45,13 @@ fun CommentsScreenRoot(
 ) {
 
     val isLoading by viewModel.isLoading.collectAsState()
-    val comments by viewModel.comments.collectAsState()
+    val comments by viewModel.commentsUiState.collectAsState()
     val post by viewModel.post.collectAsState()
     val errorPost by viewModel.errorPost.collectAsState()
     val errorComments by viewModel.errorComments.collectAsState()
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0.dp),
+        contentWindowInsets = WindowInsets.systemBars,
         topBar = {
             TopAppBarBackArrow(
                 onBackAction = onBackAction,
@@ -59,8 +60,10 @@ fun CommentsScreenRoot(
         }
     ) { innerPadding ->
 
-
-        Column(modifier = Modifier.padding(paddingValues = innerPadding)) {
+        Column(modifier = Modifier
+            .padding(innerPadding )
+            .fillMaxSize()
+        ) {
 
             if (isLoading) {
                 Box(
@@ -71,7 +74,7 @@ fun CommentsScreenRoot(
                 }
             } else {
                 CommentsScreen(
-comments = comments,
+                    comments = comments,
                     post = post,
                     errorPost = errorPost,
                     errorComment = errorComments,
@@ -97,7 +100,7 @@ fun CommentsScreen(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surfaceContainerLowest)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(SpacingSize.small)
+    verticalArrangement = Arrangement.spacedBy(SpacingSize.small)
     ) {
         if (errorPost.isNotEmpty()) {
             item {
@@ -144,34 +147,34 @@ fun CommentsScreen(
         }
 
 
-            item {
-                if (errorComment.isNotEmpty()) {
+        item {
+            if (errorComment.isNotEmpty()) {
                 ErrorMessageText(errorMessage = errorComment)
             } else if (comments.isNullOrEmpty()) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                horizontal = SpacingSize.large,
-                                vertical = SpacingSize.large
-                            ),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.bodySmall,
-                        text = stringResource(R.string.body_text_no_comments),
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = SpacingSize.large,
+                            vertical = SpacingSize.large
+                        ),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodySmall,
+                    text = stringResource(R.string.body_text_no_comments),
 
-                        )
-                }
+                    )
+            }
         }
 
         items(comments!!) { comment ->
-           Box(modifier = modifier.padding(horizontal = SpacingSize.large)){
-               CommentCard(
-                   name = comment.name,
-                   body = comment.body,
-                   email = comment.email
-               )
+            Box(modifier = modifier.padding(horizontal = SpacingSize.large)) {
+                CommentCard(
+                    name = comment.name,
+                    body = comment.body,
+                    email = comment.email
+                )
 
-           }
+            }
 
 
         }

@@ -8,7 +8,7 @@
     <string name="theme_settings_item">Theme</string>
     <string name="share_settings_item">Share</string>
     <string name="logout_settings_item">Logout</string>
-    <string name="light">Light mode</string>
+    <string name="light">Light</string>
     <string name="profile_content_description">Profile Image</string>
     <string name="top_bar_title_posts">Posts</string>
     <string name="top_bar_title_favorites">Favorites</string>

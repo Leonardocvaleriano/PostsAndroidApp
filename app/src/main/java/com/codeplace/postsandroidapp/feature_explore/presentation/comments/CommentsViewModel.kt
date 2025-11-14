@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codeplace.postsandroidapp.core.domain.Result
-import com.codeplace.postsandroidapp.feature_explore.domain.model.Comment
-import com.codeplace.postsandroidapp.feature_explore.domain.model.Post
+import com.codeplace.postsandroidapp.feature_explore.domain.models.Comment
+import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetCommentsByPostIdUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostByPostIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,13 +24,9 @@ class CommentsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-//    private val _commentsUiState = MutableStateFlow(CommentPostUiState())
-//    val commentUiState: StateFlow<CommentPostUiState> = _commentsUiState.asStateFlow()
-//
+    private val _commentsUiState = MutableStateFlow<List<Comment>?>(emptyList())
 
-    private val _comments = MutableStateFlow<List<Comment>?>(emptyList())
-
-    val comments: StateFlow<List<Comment>?> = _comments.asStateFlow()
+    val commentsUiState: StateFlow<List<Comment>?> = _commentsUiState.asStateFlow()
 
     private val _post = MutableStateFlow<Post?>(null)
     val post: StateFlow<Post?> = _post.asStateFlow()
@@ -48,14 +44,13 @@ class CommentsViewModel @Inject constructor(
 
     init {
         savedStateHandle.get<Int>("postId")?.let { postId ->
-            getPostAndCommentsByPostId(postId = postId)
+            loadPostAndComments(postId = postId)
         }
 
     }
 
 
-    fun getPostAndCommentsByPostId(postId: Int) {
-
+    fun loadPostAndComments(postId: Int) {
         viewModelScope.launch {
             _isLoading.value = true
             val postResult = async { getPostByPostIdUseCase(postId = postId) }
@@ -73,7 +68,7 @@ class CommentsViewModel @Inject constructor(
 
             when (comments) {
                 is Result.Success -> {
-                    _comments.value = comments.data as List<Comment>
+                    _commentsUiState.value = comments.data as List<Comment>
                 }
 
                 is Result.Error -> {
