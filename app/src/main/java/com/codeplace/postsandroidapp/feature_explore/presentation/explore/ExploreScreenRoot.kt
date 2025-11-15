@@ -1,46 +1,47 @@
 package com.codeplace.postsandroidapp.feature_explore.presentation.explore
 
+import DefaultSearchBar
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.codeplace.postsandroidapp.core.presentation.screens.ErrorMessageText
-import com.codeplace.postsandroidapp.feature_explore.presentation.explore.components.PostCard
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import com.codeplace.postsandroidapp.core.presentation.DefaultLoadingScreen
+import com.codeplace.postsandroidapp.core.presentation.screens.FeedBackCard
 import com.codeplace.postsandroidapp.core.presentation.theme.SpacingSize
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
+import com.codeplace.postsandroidapp.feature_explore.presentation.explore.components.PostCard
+import com.codeplace.postsandroidapp.feature_explore.presentation.explore.previews.mockPosts
 
 @Preview(showBackground = true)
 @Composable
 fun PostsPreview() {
-    val postList = listOf(
-        Post(
-            id = 1,
-            title = "Title",
-            body = "Body",
-            userId = 1,
-        ), Post(
-            id = 1,
-            title = "Title",
-            body = "Body",
-            userId = 1,
-        )
+    PostsScreen(
+        posts = mockPosts,
+        onCardClick = {},
+        commentsCount = 1,
+        onSearchFinish = {},
+        errorMessage = "Error"
     )
-        PostsScreen(
-            posts = postList,
-            onCardClick = {},
-            commentsCount = 1
-        )
 
 }
 
@@ -48,67 +49,91 @@ fun PostsPreview() {
 fun ExplorePostsScreenRoot(
     exploreViewModel: ExploreViewModel,
     onCardClick: (postId: Int) -> Unit,
-    onSearchIconClick: () -> Unit = {},
-    onSendIconClick: () -> Unit = {},
-    innerPaddings: PaddingValues
+    onSearchFinish: () -> Unit,
+    bottomPadding: Dp,
 ) {
-
     val isLoading by exploreViewModel.isLoading.collectAsState()
     val posts by exploreViewModel.posts.collectAsState()
     val errorMessage by exploreViewModel.errorMessage.collectAsState()
 
+        if (isLoading) {
+            DefaultLoadingScreen(modifier = Modifier.padding(bottom = bottomPadding))
 
-        Column(
-            modifier = Modifier
-                .padding(innerPaddings)
-                .fillMaxSize()
-        ) {
-
-            if (isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            } else if (errorMessage.isNotEmpty()) {
-                ErrorMessageText(
-                    errorMessage = errorMessage,
-                )
-            } else {
-                PostsScreen(
-                    posts = posts,
-                    onCardClick = onCardClick
-                )
-            }
+        } else {
+            PostsScreen(
+                posts = posts,
+                onCardClick = onCardClick,
+                onSearchFinish = {
+                    onSearchFinish()
+                },
+                errorMessage = errorMessage
+            )
         }
+    }
 
-}
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostsScreen(
     posts: List<Post>,
     onCardClick: (Int) -> Unit,
+    onSearchFinish: () -> Unit,
     commentsCount: Int? = 0,
+    errorMessage: String? = null
 ) {
+    val textFieldState = rememberTextFieldState()
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(top = SpacingSize.small, bottom = SpacingSize.small),
-        verticalArrangement = Arrangement.spacedBy(space = SpacingSize.small),
-    ) {
-        item {
+    val state = rememberLazyListState()
+    val firstVisibleItem = state.firstVisibleItemIndex
+    var showSearchBar by remember { mutableStateOf(true) }
 
+    LaunchedEffect(state.firstVisibleItemIndex) {
+        showSearchBar = firstVisibleItem < 1
+    }
+
+    Scaffold(
+        topBar = {
+            Column(
+                modifier = Modifier
+            ) {
+                AnimatedVisibility(
+                    visible = showSearchBar,
+                ) {
+                    DefaultSearchBar(
+                        textFieldState = textFieldState,
+                        onSearch = { it },
+                        searchResults = listOf("Result 1")
+                    )
+                }
+            }
         }
-        items(posts) { post ->
-            PostCard(
-                post = post,
-                onCardClick = onCardClick,
-                containCommentCount = commentsCount
-            )
+    ) { padding ->
+
+        LazyColumn(
+            state = state,
+            contentPadding = padding,
+
+        ) {
+            if (!errorMessage.isNullOrEmpty()){
+                item {
+                    FeedBackCard(
+                        errorMessage = errorMessage,
+                    )
+                }
+
+            }
+            items(posts) { post ->
+                PostCard(
+                    post = post,
+                    onCardClick = onCardClick,
+                    containCommentCount = commentsCount
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+            }
         }
     }
 }
+
 
 

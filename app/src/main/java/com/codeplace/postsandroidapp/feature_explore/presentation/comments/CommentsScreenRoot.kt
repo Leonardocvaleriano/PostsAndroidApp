@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,16 +29,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codeplace.postsandroidapp.R
-import com.codeplace.postsandroidapp.core.presentation.components.TopAppBarBackArrow
-import com.codeplace.postsandroidapp.core.presentation.screens.ErrorMessageText
+import com.codeplace.postsandroidapp.core.presentation.components.DefaultTopAppBar
+import com.codeplace.postsandroidapp.core.presentation.screens.FeedBackCard
 import com.codeplace.postsandroidapp.core.presentation.theme.SpacingSize
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Comment
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
-import com.codeplace.postsandroidapp.feature_explore.presentation.components.CommentCard
+import com.codeplace.postsandroidapp.feature_explore.presentation.comments.components.CommentCard
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.components.PostCard
 import com.example.compose.PostsAndroidAppTheme
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsScreenRoot(
     onBackAction: () -> Unit = {},
@@ -53,10 +55,17 @@ fun CommentsScreenRoot(
     Scaffold(
         contentWindowInsets = WindowInsets.systemBars,
         topBar = {
-            TopAppBarBackArrow(
-                onBackAction = onBackAction,
-                title = stringResource(R.string.title_comments)
+            DefaultTopAppBar(
+                onNavigationIconClick = {
+                    onBackAction()
+                },
+                content = {
+                    Text(
+                        stringResource(R.string.title_comments)
+                    )
+                },
             )
+
         }
     ) { innerPadding ->
 
@@ -104,7 +113,7 @@ fun CommentsScreen(
     ) {
         if (errorPost.isNotEmpty()) {
             item {
-                ErrorMessageText(
+                FeedBackCard(
                     errorMessage = errorPost
                 )
                 Spacer(
@@ -149,7 +158,7 @@ fun CommentsScreen(
 
         item {
             if (errorComment.isNotEmpty()) {
-                ErrorMessageText(errorMessage = errorComment)
+                FeedBackCard(errorMessage = errorComment)
             } else if (comments.isNullOrEmpty()) {
                 Text(
                     modifier = Modifier

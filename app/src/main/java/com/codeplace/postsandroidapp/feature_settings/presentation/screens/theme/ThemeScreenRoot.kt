@@ -1,7 +1,8 @@
-package com.codeplace.postsandroidapp.feature_settings.presentation.screens
+package com.codeplace.postsandroidapp.feature_settings.presentation.screens.theme
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -10,8 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.codeplace.postsandroidapp.R
-import com.codeplace.postsandroidapp.feature_settings.presentation.SettingsViewModel
-import com.codeplace.postsandroidapp.core.presentation.components.TopAppBarBackArrow
+import com.codeplace.postsandroidapp.core.presentation.components.DefaultTopAppBar
 import com.codeplace.postsandroidapp.feature_settings.domain.AppTheme
 import com.example.compose.PostsAndroidAppTheme
 
@@ -31,8 +31,9 @@ fun ThemeScreenPreview() {
 
 @Composable
 fun ThemeScreenRoot(
-    settingsViewModel: SettingsViewModel,
-    currentAppTheme: AppTheme?
+    themeViewModel: ThemeViewModel,
+    currentAppTheme: AppTheme?,
+    onBackClick: () -> Unit = {}
 
 ) {
 
@@ -40,23 +41,38 @@ fun ThemeScreenRoot(
             ThemeScreen(
                     currentAppTheme = currentAppTheme,
                     onItemClick = { currentAppTheme ->
-                        settingsViewModel.changeAppTheme(currentAppTheme)
+                        themeViewModel.changeAppTheme(currentAppTheme)
 
-                    }
+                    },
+                onBackClick = {
+                    onBackClick()
+                }
                 )
 
             }
         }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThemeScreen(
     currentAppTheme: AppTheme?,
-    onItemClick: (AppTheme) -> Unit
+    onItemClick: (AppTheme) -> Unit,
+    onBackClick:() -> Unit = {}
 ) {
 
     Column {
-        TopAppBarBackArrow(title = stringResource(R.string.top_bar_title_theme))
+        DefaultTopAppBar(
+            onNavigationIconClick = {
+              onBackClick()
+            },
+            content = {
+                Text(
+                    stringResource(R.string.top_bar_title_theme)
+                )
+            },
+        )
+
         ListItem(
             modifier = Modifier.clickable{
                 onItemClick(AppTheme.LIGHT_MODE)

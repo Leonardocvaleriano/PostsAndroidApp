@@ -30,16 +30,20 @@ class ExploreViewModel @Inject constructor(
     val errorMessage:StateFlow<String> = _errorMessage.asStateFlow()
 
 
-    init {
-        getPosts()
+    fun onSearch(){
+        loadPosts()
     }
 
-    fun getPosts() = viewModelScope.launch {
+    init {
+        loadPosts()
+    }
+
+    fun loadPosts() = viewModelScope.launch {
         _isLoading.value = true
         getPostsUseCase()
             .onSuccess { posts ->
                 _posts.value = posts
-                _errorMessage.value = ""
+                _errorMessage.value = "error.name"
                 _isLoading.value = false
             }
             .onError { error ->

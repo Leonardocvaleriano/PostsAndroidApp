@@ -1,4 +1,4 @@
-package com.codeplace.postsandroidapp.feature_explore.presentation.components
+package com.codeplace.postsandroidapp.feature_explore.presentation.comments.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

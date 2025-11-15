@@ -1,4 +1,4 @@
-package com.codeplace.postsandroidapp.feature_settings.presentation
+package com.codeplace.postsandroidapp.feature_settings.presentation.screens.theme
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
+class ThemeViewModel @Inject constructor(
     private val saveAppThemeUseCase: SaveAppThemeUseCase,
     private val getAppThemeUseCase: GetAppThemeUseCase,
     private val postsAndroidApp: PostsAndroidApp

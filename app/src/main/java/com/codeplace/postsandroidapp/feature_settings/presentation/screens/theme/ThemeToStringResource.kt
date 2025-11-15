@@ -1,9 +1,7 @@
-package com.codeplace.postsandroidapp.feature_settings.presentation
+package com.codeplace.postsandroidapp.feature_settings.presentation.screens.theme
 
 import com.codeplace.postsandroidapp.R
 import com.codeplace.postsandroidapp.core.domain.DataError
-import com.codeplace.postsandroidapp.core.domain.LocalStorageError
-import com.codeplace.postsandroidapp.core.domain.LocalStorageError.*
 import com.codeplace.postsandroidapp.core.presentation.util.UiText
 
 fun DataError.Local.toUiText(): UiText {

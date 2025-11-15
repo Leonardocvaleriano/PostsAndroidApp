@@ -4,16 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.codeplace.postsandroidapp.PostsAndroidApp
 import com.codeplace.postsandroidapp.core.presentation.navigation.NavigationRoot
 import com.codeplace.postsandroidapp.feature_settings.domain.AppTheme
-import com.codeplace.postsandroidapp.feature_settings.presentation.SettingsViewModel
+import com.codeplace.postsandroidapp.feature_settings.presentation.screens.theme.ThemeViewModel
 import com.example.compose.PostsAndroidAppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.compose.runtime.collectAsState
 
@@ -34,9 +32,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
 
-            val settingsViewModel: SettingsViewModel = hiltViewModel()
+            val themeViewModel: ThemeViewModel = hiltViewModel()
 
-            settingsViewModel.appTheme.collectAsState().value.let { appTheme ->
+            themeViewModel.appTheme.collectAsState().value.let { appTheme ->
                 PostsAndroidAppTheme(
                     darkTheme = when (postsAndroidApp.appTheme.value) {
                         AppTheme.LIGHT_MODE -> false

@@ -17,9 +17,9 @@ import com.codeplace.postsandroidapp.feature_explore.presentation.comments.Comme
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.ExplorePostsScreenRoot
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.ExploreViewModel
 import com.codeplace.postsandroidapp.feature_favorites.presentation.FavoritesScreenRoot
-import com.codeplace.postsandroidapp.feature_settings.presentation.SettingsViewModel
-import com.codeplace.postsandroidapp.feature_settings.presentation.screens.SettingsScreenRoot
-import com.codeplace.postsandroidapp.feature_settings.presentation.screens.ThemeScreenRoot
+import com.codeplace.postsandroidapp.feature_settings.presentation.screens.theme.ThemeViewModel
+import com.codeplace.postsandroidapp.feature_settings.presentation.screens.settings.SettingsScreenRoot
+import com.codeplace.postsandroidapp.feature_settings.presentation.screens.theme.ThemeScreenRoot
 
 
 @Composable
@@ -71,9 +71,10 @@ fun NavigationRoot() {
                         onCardClick = { postId ->
                             navController.navigate(ScreenRoutes.Comments(postId = postId))
                         },
-                        innerPaddings = innerPaddings
+                        bottomPadding = innerPaddings.calculateBottomPadding(),
+                        onSearchFinish = exploreViewModel::onSearch
 
-                    )
+                        )
                 }
                 composable<ScreenRoutes.Comments> { backStackEntry ->
                     val commentsRoute: ScreenRoutes.Comments = backStackEntry.toRoute()
@@ -98,12 +99,15 @@ fun NavigationRoot() {
                     )
                 }
                 composable<ScreenRoutes.Theme> {
-                    val settingsViewModel: SettingsViewModel = hiltViewModel()
-                    val appThemeUiState by settingsViewModel.appTheme.collectAsStateWithLifecycle()
+                    val themeViewModel: ThemeViewModel = hiltViewModel()
+                    val appThemeUiState by themeViewModel.appTheme.collectAsStateWithLifecycle()
 
                     ThemeScreenRoot(
-                        settingsViewModel = settingsViewModel,
-                        currentAppTheme = appThemeUiState
+                        themeViewModel = themeViewModel,
+                        currentAppTheme = appThemeUiState,
+                        onBackClick = {
+                            navController.navigateUp()
+                        }
                     )
                 }
 

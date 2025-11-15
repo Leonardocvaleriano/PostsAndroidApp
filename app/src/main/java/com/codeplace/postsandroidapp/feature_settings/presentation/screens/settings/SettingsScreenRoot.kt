@@ -1,29 +1,33 @@
-package com.codeplace.postsandroidapp.feature_settings.presentation.screens
+package com.codeplace.postsandroidapp.feature_settings.presentation.screens.settings
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material.icons.filled.ModeNight
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.codeplace.postsandroidapp.R
-import com.codeplace.postsandroidapp.core.presentation.components.TopAppBarTrailingIcon
+import com.codeplace.postsandroidapp.core.presentation.components.DefaultTopAppBar
 import com.example.compose.PostsAndroidAppTheme
 
 @Preview(showBackground = true)
 @Composable
-fun SettingsScreenPreview(){
-    PostsAndroidAppTheme{
+fun SettingsScreenPreview() {
+    PostsAndroidAppTheme {
         SettingsScreen(onThemeClick = {})
     }
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreenRoot(
     onThemeClick: () -> Unit = {},
@@ -32,9 +36,15 @@ fun SettingsScreenRoot(
 
     Scaffold(
         topBar = {
-            TopAppBarTrailingIcon(
-                title = stringResource(R.string.top_bar_title_settings)
+            DefaultTopAppBar(
+                content = {
+                    Text(
+                        stringResource(R.string.top_bar_title_settings)
+
+                    )
+                }
             )
+
         }
 
     ) { innerPadding ->
