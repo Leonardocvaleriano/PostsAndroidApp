@@ -29,9 +29,19 @@ class ExploreViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow("")
     val errorMessage:StateFlow<String> = _errorMessage.asStateFlow()
 
+    private var fullPostList: List<Post> = emptyList()
 
-    fun onSearch(){
-        loadPosts()
+
+    fun onSearch(query: String){
+        val filteredPosts = if (query.isBlank()){
+            fullPostList
+        } else {
+            fullPostList.filter { post ->
+                post.title.contains(query, ignoreCase = true) ||
+                        post.body.contains(query, ignoreCase = true)
+            }
+        }
+        _posts.value = filteredPosts
     }
 
     init {
@@ -42,8 +52,8 @@ class ExploreViewModel @Inject constructor(
         _isLoading.value = true
         getPostsUseCase()
             .onSuccess { posts ->
+                fullPostList = posts
                 _posts.value = posts
-                _errorMessage.value = "error.name"
                 _isLoading.value = false
             }
             .onError { error ->

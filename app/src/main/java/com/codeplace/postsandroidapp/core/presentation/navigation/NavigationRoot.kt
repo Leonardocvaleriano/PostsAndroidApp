@@ -30,7 +30,6 @@ fun NavigationRoot() {
 
 
     val isBottomAppBarVisible = when (screenRoutes) {
-
         ScreenRoutes.Explore::class.qualifiedName -> true
         ScreenRoutes.Favorites::class.qualifiedName -> true
         ScreenRoutes.Settings::class.qualifiedName -> true
@@ -72,15 +71,13 @@ fun NavigationRoot() {
                             navController.navigate(ScreenRoutes.Comments(postId = postId))
                         },
                         bottomPadding = innerPaddings.calculateBottomPadding(),
-                        onSearchFinish = exploreViewModel::onSearch
-
                         )
                 }
                 composable<ScreenRoutes.Comments> { backStackEntry ->
                     val commentsRoute: ScreenRoutes.Comments = backStackEntry.toRoute()
                     // StandardScaffold()
                     CommentsScreenRoot(
-                        onBackAction = {
+                        onBackClick = {
                             navController.popBackStack()
                             navController.navigate(ScreenRoutes.Explore)
                         }

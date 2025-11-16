@@ -20,21 +20,8 @@ fun FavoritesScreenRoot(
     onSearchIconClick: () -> Unit = {},
 ) {
 
-    Scaffold(
-        topBar = {
-            DefaultTopAppBar(
-                content = {
-                    Text(
-                        stringResource(R.string.top_bar_title_favorites)
-                    )
-
-                }
-            )
-        }
-    ) { innerPadding ->
-        Box(modifier = modifier.padding(innerPadding)){
-            FavoritesScreen()
-        }
+    Box{
+        FavoritesScreen()
     }
 }
 @Composable

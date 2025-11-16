@@ -1,5 +1,6 @@
 package com.codeplace.postsandroidapp.core.presentation.components
 
+import android.sax.Element
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -53,7 +54,7 @@ private fun DefaultTopAppBarPreview() {
 @Composable
 fun DefaultTopAppBar(
     modifier: Modifier = Modifier,
-    onNavigationIconClick: () -> Unit = {},
+    navigationElement: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {},
     trailingActions: @Composable () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -61,12 +62,7 @@ fun DefaultTopAppBar(
 
         TopAppBar(
             navigationIcon = {
-                Icon(
-                    modifier = Modifier.padding(start = 16.dp),
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Search Icon",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                navigationElement()
             },
             scrollBehavior = scrollBehavior,
             colors = TopAppBarDefaults.topAppBarColors(

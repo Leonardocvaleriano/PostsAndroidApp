@@ -37,6 +37,7 @@ fun SettingsScreenRoot(
     Scaffold(
         topBar = {
             DefaultTopAppBar(
+
                 content = {
                     Text(
                         stringResource(R.string.top_bar_title_settings)

@@ -1,6 +1,7 @@
 package com.codeplace.postsandroidapp.feature_explore.presentation.comments
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,10 +45,10 @@ import com.codeplace.postsandroidapp.feature_explore.presentation.explore.compon
 import com.example.compose.PostsAndroidAppTheme
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CommentsScreenRoot(
-    onBackAction: () -> Unit = {},
+    onBackClick: () -> Unit = {},
     viewModel: CommentsViewModel = hiltViewModel(),
 ) {
 
@@ -56,12 +62,25 @@ fun CommentsScreenRoot(
         contentWindowInsets = WindowInsets.systemBars,
         topBar = {
             DefaultTopAppBar(
-                onNavigationIconClick = {
-                    onBackAction()
+                navigationElement = {
+                    Icon(
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .clickable {
+                                onBackClick()
+
+                            },
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Search Icon",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 },
                 content = {
                     Text(
-                        stringResource(R.string.title_comments)
+                        text =stringResource(R.string.title_comments),
+                        style = MaterialTheme.typography.bodyLargeEmphasized,
+                        fontWeight = FontWeight.SemiBold
+
                     )
                 },
             )

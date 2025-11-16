@@ -39,7 +39,6 @@ fun PostCard(
     Card(
         shape = ShapeDefaults.Medium,
         modifier = modifier
-            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .clickable(
                 interactionSource = interactionSource,

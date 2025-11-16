@@ -38,7 +38,7 @@ fun FeedBackCard(
     }
     Card(
         modifier = Modifier
-            .padding(16.dp)
+
             .fillMaxWidth(),
         colors = CardColors(
             containerColor = containerColor,
@@ -46,11 +46,7 @@ fun FeedBackCard(
             disabledContentColor = MaterialTheme.colorScheme.background,
             disabledContainerColor = MaterialTheme.colorScheme.background,
         ),
-        shape = ShapeDefaults.Medium,
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.error
-        )
+        shape = RoundedCornerShape(size = 0.dp),
     ) {
         Box(modifier = Modifier.padding(12.dp)) {
             Text(

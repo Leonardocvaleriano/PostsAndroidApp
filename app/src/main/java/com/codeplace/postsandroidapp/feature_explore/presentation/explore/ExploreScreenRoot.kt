@@ -1,10 +1,9 @@
 package com.codeplace.postsandroidapp.feature_explore.presentation.explore
 
 import DefaultSearchBar
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,21 +12,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.codeplace.postsandroidapp.core.presentation.DefaultLoadingScreen
 import com.codeplace.postsandroidapp.core.presentation.screens.FeedBackCard
-import com.codeplace.postsandroidapp.core.presentation.theme.SpacingSize
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.components.PostCard
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.previews.mockPosts
@@ -39,7 +36,7 @@ fun PostsPreview() {
         posts = mockPosts,
         onCardClick = {},
         commentsCount = 1,
-        onSearchFinish = {},
+        onSearch = {},
         errorMessage = "Error"
     )
 
@@ -49,28 +46,27 @@ fun PostsPreview() {
 fun ExplorePostsScreenRoot(
     exploreViewModel: ExploreViewModel,
     onCardClick: (postId: Int) -> Unit,
-    onSearchFinish: () -> Unit,
+    onSearch: (String) -> Unit = { query ->
+        exploreViewModel.onSearch(query)
+    },
     bottomPadding: Dp,
 ) {
     val isLoading by exploreViewModel.isLoading.collectAsState()
     val posts by exploreViewModel.posts.collectAsState()
     val errorMessage by exploreViewModel.errorMessage.collectAsState()
 
-        if (isLoading) {
-            DefaultLoadingScreen(modifier = Modifier.padding(bottom = bottomPadding))
+    if (isLoading) {
+        DefaultLoadingScreen(modifier = Modifier.padding(bottom = bottomPadding))
 
-        } else {
-            PostsScreen(
-                posts = posts,
-                onCardClick = onCardClick,
-                onSearchFinish = {
-                    onSearchFinish()
-                },
-                errorMessage = errorMessage
-            )
-        }
+    } else {
+        PostsScreen(
+            posts = posts,
+            onCardClick = onCardClick,
+            onSearch = onSearch,
+            errorMessage = errorMessage
+        )
     }
-
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,21 +74,20 @@ fun ExplorePostsScreenRoot(
 fun PostsScreen(
     posts: List<Post>,
     onCardClick: (Int) -> Unit,
-    onSearchFinish: () -> Unit,
+    onSearch: (String) -> Unit,
     commentsCount: Int? = 0,
     errorMessage: String? = null
 ) {
     val textFieldState = rememberTextFieldState()
-
     val state = rememberLazyListState()
-    val firstVisibleItem = state.firstVisibleItemIndex
-    var showSearchBar by remember { mutableStateOf(true) }
 
-    LaunchedEffect(state.firstVisibleItemIndex) {
-        showSearchBar = firstVisibleItem < 1
+    val showSearchBar by remember {
+        derivedStateOf {
+            if (state.firstVisibleItemScrollOffset >= 30) false else true }
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         topBar = {
             Column(
                 modifier = Modifier
@@ -102,7 +97,9 @@ fun PostsScreen(
                 ) {
                     DefaultSearchBar(
                         textFieldState = textFieldState,
-                        onSearch = { it },
+                        onSearch = { query ->
+                            onSearch(query)
+                        },
                         searchResults = listOf("Result 1")
                     )
                 }
@@ -114,14 +111,15 @@ fun PostsScreen(
             state = state,
             contentPadding = padding,
 
-        ) {
-            if (!errorMessage.isNullOrEmpty()){
+            ) {
+            if (!errorMessage.isNullOrEmpty()) {
                 item {
+                    Spacer(modifier = Modifier.size(12.dp))
                     FeedBackCard(
                         errorMessage = errorMessage,
                     )
+                    Spacer(modifier = Modifier.size(12.dp))
                 }
-
             }
             items(posts) { post ->
                 PostCard(
