@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.codeplace.postsandroidapp.core.domain.Result
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Comment
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
-import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetCommentsByPostIdUseCase
-import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostByPostIdUseCase
+import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetCommentsUseCase
+import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -19,8 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CommentsViewModel @Inject constructor(
-    val getPostByPostIdUseCase: GetPostByPostIdUseCase,
-    val getCommentsByPostIdUseCase: GetCommentsByPostIdUseCase,
+    val getPostUseCase: GetPostUseCase,
+    val getCommentsUseCase: GetCommentsUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -53,8 +53,8 @@ class CommentsViewModel @Inject constructor(
     fun loadPostAndComments(postId: Int) {
         viewModelScope.launch {
             _isLoading.value = true
-            val postResult = async { getPostByPostIdUseCase(postId = postId) }
-            val commentsResult = async { getCommentsByPostIdUseCase(postId = postId) }
+            val postResult = async { getPostUseCase(postId = postId) }
+            val commentsResult = async { getCommentsUseCase(postId = postId) }
             val (post, comments) = awaitAll(postResult, commentsResult)
 
             when (post) {

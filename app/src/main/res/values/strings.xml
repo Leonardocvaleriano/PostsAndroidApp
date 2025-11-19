@@ -34,4 +34,9 @@
     <string name="key_not_found">Required data could not be found. Please try again later.</string>
     <string name="unknown_error">An unknown error occurred. Please try again.</string>
 
+    <string name="no_result_found">No result found</string>
+    <string name="recent_post_searches">Recent post searches</string>
+
+    <string name="no_matching_item">We didn\'t find any item matching your search</string>
+
 </resources>

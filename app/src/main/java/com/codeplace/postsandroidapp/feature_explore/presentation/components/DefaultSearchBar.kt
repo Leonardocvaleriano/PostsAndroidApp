@@ -1,10 +1,5 @@
-import android.R.attr.scaleX
-import android.R.attr.scaleY
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -31,8 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.isCheckboxStylingFixEnabled
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,13 +34,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.codeplace.postsandroidapp.R
+import com.codeplace.postsandroidapp.core.presentation.DefaultLoadingScreen
 import com.codeplace.postsandroidapp.core.presentation.components.IconAction
 import com.codeplace.postsandroidapp.core.presentation.components.IconContainer
 
@@ -55,7 +51,12 @@ import com.codeplace.postsandroidapp.core.presentation.components.IconContainer
 fun DefaultSearchBarPreview() {
     DefaultSearchBar(
         searchResults = listOf("Result"),
-        onSearch = {}
+        onSearch = {},
+        onSearchBarClick = {},
+        isLoading = false,
+        onRecentSearchItemClick = {
+        }
+
     )
 }
 
@@ -66,7 +67,10 @@ fun DefaultSearchBar(
     modifier: Modifier = Modifier,
     textFieldState: TextFieldState = rememberTextFieldState(),
     onSearch: (String) -> Unit,
+    onSearchBarClick: () -> Unit,
     searchResults: List<String>,
+    isLoading: Boolean = false,
+    onRecentSearchItemClick:(String) -> Unit
 ) {
     // Controls expansion state of the search bar
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -84,7 +88,7 @@ fun DefaultSearchBar(
         Box(
             modifier
                 .background(MaterialTheme.colorScheme.background)
-                 .fillMaxWidth()
+                .fillMaxWidth()
                 .semantics { isTraversalGroup = true }
         ) {
             SearchBar(
@@ -93,9 +97,9 @@ fun DefaultSearchBar(
                     .align(Alignment.TopCenter)
                     .semantics { traversalIndex = 0f },
                 colors = SearchBarDefaults.colors(
-                    containerColor =inputFieldColor,
+                    containerColor = inputFieldColor,
 
-                ),
+                    ),
                 inputField = {
                     SearchBarDefaults.InputField(
                         modifier = Modifier
@@ -109,6 +113,7 @@ fun DefaultSearchBar(
                         expanded = expanded,
                         onExpandedChange = {
                             expanded = it
+                            if (it) onSearchBarClick()
                         },
                         placeholder = { Text("Search") },
                         leadingIcon = {
@@ -119,10 +124,11 @@ fun DefaultSearchBar(
                                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
                                             contentDescription = null,
                                             tint = MaterialTheme.colorScheme.onSurface
-                                            )
+                                        )
                                     },
                                     onClick = {
-                                            expanded = false
+
+                                        expanded = false
                                     }
                                 )
                             } else {
@@ -138,51 +144,69 @@ fun DefaultSearchBar(
                 expanded = expanded,
                 onExpandedChange = { expanded = it },
             ) {
-                // Display search results in a scrollable column
 
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.surfaceContainerLowest)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    searchResults.forEach { result ->
-                        Text(
-                            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                            text = "Recent words searches",
-                            style = MaterialTheme.typography.labelMediumEmphasized,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            letterSpacing = 1.2.sp
-                        )
-                        Spacer(Modifier.size(8.dp))
-                        ListItem(
-                            colors = ListItemDefaults.colors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-                            ),
-                            leadingContent = {
-                                IconContainer(
-                                    iconElement = {
-                                        Icon(
-                                            imageVector = Icons.Default.AccessTime,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
+                if (isLoading) {
+                    DefaultLoadingScreen(modifier = Modifier.fillMaxSize())
+                } else {
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        if (searchResults.isNotEmpty()) {
+                            Text(
+                                modifier = Modifier.padding(
+                                    top = 16.dp,
+                                    start = 16.dp,
+                                    end = 16.dp
+                                ),
+                                text = stringResource(R.string.recent_post_searches),
+                                style = MaterialTheme.typography.labelMediumEmphasized,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                letterSpacing = 1.2.sp
+                            )
+                            Spacer(Modifier.size(8.dp))
+
+                        }
+
+
+                        searchResults.forEach { result ->
+                            ListItem(
+                                colors = ListItemDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+                                ),
+                                leadingContent = {
+                                    IconContainer(
+                                        iconElement = {
+                                            Icon(
+                                                imageVector = Icons.Default.AccessTime,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    )
+                                },
+                                headlineContent = {
+                                    Text(
+                                        text = result,
+                                        style = MaterialTheme.typography.bodyMedium
+
+                                    )
+                                },
+                                modifier = Modifier
+                                    .clickable {
+                                        onRecentSearchItemClick(result)
+                                        textFieldState.edit { replace(0, length, result) }
+
+                                        expanded = false
                                     }
-                                )
-                            },
-                            headlineContent = { Text(
-                                text = result,
-                                style = MaterialTheme.typography.bodyMedium
-
-                            ) },
-                            modifier = Modifier
-                                .clickable {
-                                    textFieldState.edit { replace(0, length, result) }
-                                    expanded = false
-                                }
-                                .fillMaxWidth()
-                        )
+                                    .fillMaxWidth()
+                            )
+                        }
                     }
+
+
                 }
 
 

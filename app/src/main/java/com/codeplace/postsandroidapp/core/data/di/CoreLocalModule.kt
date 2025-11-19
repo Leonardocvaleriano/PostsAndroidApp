@@ -19,8 +19,9 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 object LocalModule{
     @Provides
     @Singleton
-    fun provideDataStore(
+    fun providePreferencesDataStore(
         @ApplicationContext context: Context): DataStore<Preferences>{
         return context.dataStore
     }
+
 }

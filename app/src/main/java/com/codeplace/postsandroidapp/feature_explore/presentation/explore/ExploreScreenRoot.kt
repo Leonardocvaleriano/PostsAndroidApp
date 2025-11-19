@@ -1,10 +1,10 @@
 package com.codeplace.postsandroidapp.feature_explore.presentation.explore
 
 import DefaultSearchBar
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,8 +26,10 @@ import androidx.compose.ui.unit.dp
 import com.codeplace.postsandroidapp.core.presentation.DefaultLoadingScreen
 import com.codeplace.postsandroidapp.core.presentation.screens.FeedBackCard
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
+import com.codeplace.postsandroidapp.feature_explore.presentation.explore.components.NoResultFoundContent
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.components.PostCard
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.previews.mockPosts
+import kotlin.math.exp
 
 @Preview(showBackground = true)
 @Composable
@@ -37,7 +39,10 @@ fun PostsPreview() {
         onCardClick = {},
         commentsCount = 1,
         onSearch = {},
-        errorMessage = "Error"
+        errorMessage = "Error",
+        onSearchBarClick = { },
+        recentWordSearches = listOf("Last word searched"),
+        onRecentSearchItemClick = {}
     )
 
 }
@@ -49,11 +54,20 @@ fun ExplorePostsScreenRoot(
     onSearch: (String) -> Unit = { query ->
         exploreViewModel.onSearch(query)
     },
+    onSearchBarClick: () -> Unit = {
+        exploreViewModel.loadRecentPostSearches()
+    },
     bottomPadding: Dp,
+    onRecentSearchItemClick:(String) -> Unit = { query ->
+        exploreViewModel.onSearch(query)
+    }
 ) {
+
+    val isSearchContentLoading by exploreViewModel.isSearchContentLoading.collectAsState()
     val isLoading by exploreViewModel.isLoading.collectAsState()
     val posts by exploreViewModel.posts.collectAsState()
     val errorMessage by exploreViewModel.errorMessage.collectAsState()
+    val recentWordSearches by exploreViewModel.recentSearches.collectAsState()
 
     if (isLoading) {
         DefaultLoadingScreen(modifier = Modifier.padding(bottom = bottomPadding))
@@ -63,7 +77,15 @@ fun ExplorePostsScreenRoot(
             posts = posts,
             onCardClick = onCardClick,
             onSearch = onSearch,
-            errorMessage = errorMessage
+            errorMessage = errorMessage,
+            recentWordSearches = recentWordSearches,
+            onSearchBarClick = {
+                onSearchBarClick()
+            },
+            isLoading = isSearchContentLoading,
+            onRecentSearchItemClick = { query ->
+                onRecentSearchItemClick(query)
+            }
         )
     }
 }
@@ -75,15 +97,20 @@ fun PostsScreen(
     posts: List<Post>,
     onCardClick: (Int) -> Unit,
     onSearch: (String) -> Unit,
+    onSearchBarClick:() -> Unit,
     commentsCount: Int? = 0,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    recentWordSearches: List<String>,
+    isLoading: Boolean = false,
+    onRecentSearchItemClick:(String) -> Unit
 ) {
     val textFieldState = rememberTextFieldState()
     val state = rememberLazyListState()
 
     val showSearchBar by remember {
         derivedStateOf {
-            if (state.firstVisibleItemScrollOffset >= 30) false else true }
+            if (state.firstVisibleItemScrollOffset >= 30) false else true
+        }
     }
 
     Scaffold(
@@ -100,18 +127,30 @@ fun PostsScreen(
                         onSearch = { query ->
                             onSearch(query)
                         },
-                        searchResults = listOf("Result 1")
+                        searchResults = recentWordSearches,
+                        onSearchBarClick = {
+                            onSearchBarClick()
+                        },
+                        isLoading =  isLoading,
+                        onRecentSearchItemClick = { query ->
+                            onRecentSearchItemClick(query)
+                        }
                     )
                 }
             }
         }
     ) { padding ->
+        if (posts.isEmpty()) {
+            NoResultFoundContent(modifier = Modifier.padding(padding))
+        }
 
         LazyColumn(
+            modifier = Modifier.fillMaxSize(),
             state = state,
             contentPadding = padding,
 
             ) {
+
             if (!errorMessage.isNullOrEmpty()) {
                 item {
                     Spacer(modifier = Modifier.size(12.dp))
