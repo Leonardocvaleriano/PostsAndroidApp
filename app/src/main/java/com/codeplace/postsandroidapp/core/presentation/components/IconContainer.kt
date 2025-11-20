@@ -31,7 +31,7 @@ fun IconContainer(
     Box(
         modifier = Modifier
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .size(40.dp),
         contentAlignment = Alignment.Center
 

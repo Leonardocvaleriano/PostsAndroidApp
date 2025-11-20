@@ -87,7 +87,7 @@ fun DefaultSearchBar(
     Column {
         Box(
             modifier
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.surfaceContainerLowest)
                 .fillMaxWidth()
                 .semantics { isTraversalGroup = true }
         ) {
@@ -135,6 +135,8 @@ fun DefaultSearchBar(
                                 Icon(
                                     imageVector = Icons.Filled.Search,
                                     contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+
                                 )
                             }
                         }

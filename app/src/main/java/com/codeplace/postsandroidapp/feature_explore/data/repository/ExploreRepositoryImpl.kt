@@ -1,6 +1,5 @@
 package com.codeplace.postsandroidapp.feature_explore.data.repository
 
-import android.util.Log
 import com.codeplace.postsandroidapp.core.domain.DataError
 import com.codeplace.postsandroidapp.core.domain.Result
 import com.codeplace.postsandroidapp.core.domain.map
@@ -11,12 +10,12 @@ import com.codeplace.postsandroidapp.feature_explore.data.mappers.toEntity
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Comment
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.domain.models.SearchHistory
-import com.codeplace.postsandroidapp.feature_explore.domain.repository.PostsRepository
+import com.codeplace.postsandroidapp.feature_explore.domain.repository.ExploreRepository
 
-class PostsRepositoryImpl(
+class ExploreRepositoryImpl(
     private val exploreRemoteDataSource: ExploreRemoteDataSource,
     private val exploreLocalDataSource: ExploreLocalDataSource
-) : PostsRepository {
+) : ExploreRepository {
 
     override suspend fun getPosts(): Result<List<Post>, DataError.Network> {
         return exploreRemoteDataSource.fetchPosts().map { postsDto -> postsDto.toDomain() }

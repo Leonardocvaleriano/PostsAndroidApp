@@ -1,13 +1,18 @@
 package com.codeplace.postsandroidapp.feature_settings.presentation.screens.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,32 +56,30 @@ fun SettingsScreenRoot(
     ) { innerPadding ->
 
         Column(modifier = Modifier.padding(innerPadding)) {
-
             SettingsScreen(
                 onThemeClick = onThemeClick
             )
         }
     }
-
-
 }
 
 @Composable
 fun SettingsScreen(
     onThemeClick: () -> Unit,
 ) {
-    Column {
+    Column(modifier = Modifier
+        .fillMaxSize()
+    ) {
         ListItem(
-            modifier = Modifier.clickable {
-                onThemeClick()
-            },
+            modifier = Modifier
+                .clickable { onThemeClick() },
             headlineContent = {
                 Text(text = stringResource(R.string.theme_settings_item))
 
             },
             leadingContent = {
                 Icon(
-                    Icons.Default.LightMode,
+                    Icons.Outlined.LightMode,
                     contentDescription = null,
                 )
             },

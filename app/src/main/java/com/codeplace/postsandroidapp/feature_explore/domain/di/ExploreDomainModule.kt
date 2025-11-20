@@ -1,9 +1,6 @@
 package com.codeplace.postsandroidapp.feature_explore.domain.di
 
-import com.codeplace.postsandroidapp.feature_explore.data.datasources.ExploreLocalDataSource
-import com.codeplace.postsandroidapp.feature_explore.data.datasources.ExploreRemoteDataSource
-import com.codeplace.postsandroidapp.feature_explore.data.repository.PostsRepositoryImpl
-import com.codeplace.postsandroidapp.feature_explore.domain.repository.PostsRepository
+import com.codeplace.postsandroidapp.feature_explore.domain.repository.ExploreRepository
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetCommentsUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostsUseCase
@@ -20,19 +17,19 @@ object ExploreDomainModule {
 
     @Provides
     @Singleton
-    fun providePostUseCase(repository: PostsRepository): GetPostUseCase{
+    fun providePostUseCase(repository: ExploreRepository): GetPostUseCase{
         return GetPostUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun providePostsUseCase(repository: PostsRepository): GetPostsUseCase{
+    fun providePostsUseCase(repository: ExploreRepository): GetPostsUseCase{
         return GetPostsUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun provideCommentsUseCases(repository: PostsRepository): GetCommentsUseCase{
+    fun provideCommentsUseCases(repository: ExploreRepository): GetCommentsUseCase{
         return GetCommentsUseCase(repository)
     }
 

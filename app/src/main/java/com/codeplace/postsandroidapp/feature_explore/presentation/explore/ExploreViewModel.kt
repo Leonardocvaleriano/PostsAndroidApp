@@ -51,7 +51,6 @@ class ExploreViewModel @Inject constructor(
         if (query.isBlank() || query.isEmpty()){
             loadPosts()
         }
-
         saveQueryToHistory(query = query)
         filterPosts(query = query)
     }

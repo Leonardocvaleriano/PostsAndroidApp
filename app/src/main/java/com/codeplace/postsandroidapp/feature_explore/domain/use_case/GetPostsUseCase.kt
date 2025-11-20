@@ -3,11 +3,11 @@ package com.codeplace.postsandroidapp.feature_explore.domain.use_case
 import com.codeplace.postsandroidapp.core.domain.DataError
 import com.codeplace.postsandroidapp.core.domain.Result
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
-import com.codeplace.postsandroidapp.feature_explore.domain.repository.PostsRepository
+import com.codeplace.postsandroidapp.feature_explore.domain.repository.ExploreRepository
 import javax.inject.Inject
 
 class GetPostsUseCase @Inject constructor(
-    val repository: PostsRepository
+    val repository: ExploreRepository
 ){
     suspend operator fun invoke(): Result<List<Post>, DataError.Network> {
         return repository.getPosts()

@@ -8,9 +8,9 @@ import com.codeplace.postsandroidapp.feature_settings.data.local.util.Constants
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class LocalDataSourceImpl(
+class SettingsLocalDataSourceImpl(
     private val dataStore: DataStore<Preferences>,
-) : LocalDataSource {
+) : SettingsLocalDataSource {
     override suspend fun saveAppTheme(appTheme: String) {
         dataStore.edit { preferences ->
             preferences[Constants.KEY_THEME] = appTheme

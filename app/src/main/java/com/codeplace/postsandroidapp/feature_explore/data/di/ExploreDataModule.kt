@@ -9,8 +9,8 @@ import com.codeplace.postsandroidapp.feature_explore.data.datasources.ExploreRem
 import com.codeplace.postsandroidapp.feature_explore.data.datasources.ExploreRemoteDataSourceImpl
 import com.codeplace.postsandroidapp.feature_explore.data.local.entity.SearchHistoryEntity
 import com.codeplace.postsandroidapp.feature_explore.data.local.SearchHistorySerializer
-import com.codeplace.postsandroidapp.feature_explore.data.repository.PostsRepositoryImpl
-import com.codeplace.postsandroidapp.feature_explore.domain.repository.PostsRepository
+import com.codeplace.postsandroidapp.feature_explore.data.repository.ExploreRepositoryImpl
+import com.codeplace.postsandroidapp.feature_explore.domain.repository.ExploreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,8 +54,8 @@ object ExploreDataModule {
     fun provideExploreRepository(
         exploreRemoteDataSource: ExploreRemoteDataSource,
         exploreLocalDataSource: ExploreLocalDataSource
-    ): PostsRepository {
-        return PostsRepositoryImpl(
+    ): ExploreRepository {
+        return ExploreRepositoryImpl(
             exploreRemoteDataSource = exploreRemoteDataSource,
             exploreLocalDataSource = exploreLocalDataSource
         )

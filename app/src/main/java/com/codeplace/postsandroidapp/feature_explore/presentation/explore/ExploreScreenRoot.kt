@@ -42,7 +42,7 @@ fun PostsPreview() {
         errorMessage = "Error",
         onSearchBarClick = { },
         recentWordSearches = listOf("Last word searched"),
-        onRecentSearchItemClick = {}
+        onRecentSearchItemClick = {},
     )
 
 }
@@ -58,8 +58,11 @@ fun ExplorePostsScreenRoot(
         exploreViewModel.loadRecentPostSearches()
     },
     bottomPadding: Dp,
-    onRecentSearchItemClick:(String) -> Unit = { query ->
+    onRecentSearchItemClick: (String) -> Unit = { query ->
         exploreViewModel.onSearch(query)
+    },
+    onGoBackClick: () -> Unit = {
+        exploreViewModel.loadPosts()
     }
 ) {
 
@@ -85,6 +88,9 @@ fun ExplorePostsScreenRoot(
             isLoading = isSearchContentLoading,
             onRecentSearchItemClick = { query ->
                 onRecentSearchItemClick(query)
+            },
+            onGoBackClick = {
+                onGoBackClick()
             }
         )
     }
@@ -97,12 +103,13 @@ fun PostsScreen(
     posts: List<Post>,
     onCardClick: (Int) -> Unit,
     onSearch: (String) -> Unit,
-    onSearchBarClick:() -> Unit,
+    onSearchBarClick: () -> Unit,
     commentsCount: Int? = 0,
     errorMessage: String? = null,
     recentWordSearches: List<String>,
     isLoading: Boolean = false,
-    onRecentSearchItemClick:(String) -> Unit
+    onRecentSearchItemClick: (String) -> Unit,
+    onGoBackClick: () -> Unit = {}
 ) {
     val textFieldState = rememberTextFieldState()
     val state = rememberLazyListState()
@@ -131,7 +138,7 @@ fun PostsScreen(
                         onSearchBarClick = {
                             onSearchBarClick()
                         },
-                        isLoading =  isLoading,
+                        isLoading = isLoading,
                         onRecentSearchItemClick = { query ->
                             onRecentSearchItemClick(query)
                         }
@@ -141,32 +148,37 @@ fun PostsScreen(
         }
     ) { padding ->
         if (posts.isEmpty()) {
-            NoResultFoundContent(modifier = Modifier.padding(padding))
-        }
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = state,
-            contentPadding = padding,
-
-            ) {
-
-            if (!errorMessage.isNullOrEmpty()) {
-                item {
-                    Spacer(modifier = Modifier.size(12.dp))
-                    FeedBackCard(
-                        errorMessage = errorMessage,
-                    )
-                    Spacer(modifier = Modifier.size(12.dp))
+            NoResultFoundContent(
+                modifier = Modifier.padding(padding),
+                onGoBackClick = {
+                    onGoBackClick()
                 }
-            }
-            items(posts) { post ->
-                PostCard(
-                    post = post,
-                    onCardClick = onCardClick,
-                    containCommentCount = commentsCount
-                )
-                Spacer(modifier = Modifier.size(8.dp))
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                contentPadding = padding,
+
+                ) {
+
+                if (!errorMessage.isNullOrEmpty()) {
+                    item {
+                        Spacer(modifier = Modifier.size(12.dp))
+                        FeedBackCard(
+                            errorMessage = errorMessage,
+                        )
+                        Spacer(modifier = Modifier.size(12.dp))
+                    }
+                }
+                items(posts) { post ->
+                    PostCard(
+                        post = post,
+                        onCardClick = onCardClick,
+                        containCommentCount = commentsCount
+                    )
+                    Spacer(modifier = Modifier.size(8.dp))
+                }
             }
         }
     }
