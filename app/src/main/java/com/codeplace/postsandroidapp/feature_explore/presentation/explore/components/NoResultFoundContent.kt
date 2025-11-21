@@ -59,7 +59,7 @@ fun NoResultFoundContent(
                 modifier = Modifier.size(112.dp),
                 imageVector = Icons.Default.SearchOff,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
