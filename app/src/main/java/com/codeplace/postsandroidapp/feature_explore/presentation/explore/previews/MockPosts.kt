@@ -2,17 +2,18 @@ package com.codeplace.postsandroidapp.feature_explore.presentation.explore.previ
 
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 
-val mockPosts = listOf<Post>(
+val mockPosts = List(30) { index ->
     Post(
-        id = 1,
-        title = "Title",
-        body = "Body",
+        id = index,
+        title = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor in",
+        body = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata",
         userId = 1,
-    ),
-    Post(
-        id = 2,
-        title = "Title 2 ",
-        body = "Body 2",
-        userId = 2,
     )
+}
+
+val mockPostCard = Post(
+    id = 1,
+    title = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor in",
+    body = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata",
+    userId = 123
 )

@@ -2,7 +2,9 @@ package com.codeplace.postsandroidapp.feature_explore.presentation.explore
 
 import DefaultSearchBar
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -29,21 +31,25 @@ import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.components.NoResultFoundContent
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.components.PostCard
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.previews.mockPosts
+import com.example.compose.PostsAndroidAppTheme
 import kotlin.math.exp
 
 @Preview(showBackground = true)
 @Composable
 fun PostsPreview() {
-    PostsScreen(
-        posts = mockPosts,
-        onCardClick = {},
-        commentsCount = 1,
-        onSearch = {},
-        errorMessage = "Error",
-        onSearchBarClick = { },
-        recentWordSearches = listOf("Last word searched"),
-        onRecentSearchItemClick = {},
-    )
+    PostsAndroidAppTheme {
+        PostsScreen(
+            posts = mockPosts,
+            onCardClick = {},
+            commentsCount = 1,
+            onSearch = {},
+            errorMessage = "Error",
+            onSearchBarClick = { },
+            recentWordSearches = listOf("Last word searched"),
+            onRecentSearchItemClick = {},
+        )
+    }
+
 
 }
 
@@ -104,7 +110,7 @@ fun PostsScreen(
     onCardClick: (Int) -> Unit,
     onSearch: (String) -> Unit,
     onSearchBarClick: () -> Unit,
-    commentsCount: Int? = 0,
+    commentsCount: Int? = null,
     errorMessage: String? = null,
     recentWordSearches: List<String>,
     isLoading: Boolean = false,
@@ -156,9 +162,13 @@ fun PostsScreen(
             )
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(horizontal = 16.dp)
+                ,
                 state = state,
-                contentPadding = padding,
+                contentPadding =padding,
 
                 ) {
 
@@ -175,7 +185,6 @@ fun PostsScreen(
                     PostCard(
                         post = post,
                         onCardClick = onCardClick,
-                        containCommentCount = commentsCount
                     )
                     Spacer(modifier = Modifier.size(8.dp))
                 }

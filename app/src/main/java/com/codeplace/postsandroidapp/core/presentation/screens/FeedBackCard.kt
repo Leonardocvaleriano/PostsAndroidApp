@@ -16,8 +16,10 @@ import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.compose.PostsAndroidAppTheme
@@ -38,15 +40,16 @@ fun FeedBackCard(
     }
     Card(
         modifier = Modifier
-
+            .clip(shape = RectangleShape)
             .fillMaxWidth(),
+
         colors = CardColors(
             containerColor = containerColor,
             contentColor = contentColor,
             disabledContentColor = MaterialTheme.colorScheme.background,
             disabledContainerColor = MaterialTheme.colorScheme.background,
         ),
-        shape = RoundedCornerShape(size = 0.dp),
+
     ) {
         Box(modifier = Modifier.padding(12.dp)) {
             Text(

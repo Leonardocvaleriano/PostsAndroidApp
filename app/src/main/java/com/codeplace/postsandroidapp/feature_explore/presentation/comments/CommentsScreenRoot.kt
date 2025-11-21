@@ -123,6 +123,7 @@ fun CommentsScreen(
     onCardClick: (Int) -> Unit = {},
     errorPost: String = "",
     errorComment: String = "",
+
 ) {
     LazyColumn(
         modifier = Modifier
@@ -152,8 +153,10 @@ fun CommentsScreen(
             post?.let { post ->
                 item {
                     PostCard(
+                        showFavoriteIcon = false,
                         post = post,
-                        onCardClick = {}
+                        onCardClick = {},
+
                     )
                     Spacer(
                         modifier = Modifier
