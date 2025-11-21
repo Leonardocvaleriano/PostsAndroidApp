@@ -4,8 +4,6 @@ import androidx.datastore.core.DataStore
 import com.codeplace.postsandroidapp.core.domain.DataError
 import com.codeplace.postsandroidapp.core.domain.Result
 import com.codeplace.postsandroidapp.feature_explore.data.local.entity.SearchHistoryEntity
-import com.codeplace.postsandroidapp.feature_explore.domain.models.SearchHistory
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 

@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
+
 
 }
 
@@ -107,9 +109,10 @@ dependencies {
 
     // JsonDataStore
     implementation(libs.kotlinx.serialization.json)
-    implementation("androidx.datastore:datastore:1.1.7")
-    // This is required to save list using Proto DataStore
-    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
+    implementation(libs.androidx.datastore)
+
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
 
 }
 

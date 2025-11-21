@@ -4,7 +4,6 @@ import com.codeplace.postsandroidapp.core.domain.DataError
 import com.codeplace.postsandroidapp.core.domain.Result
 import com.codeplace.postsandroidapp.feature_explore.data.network.dtos.CommentDto
 import com.codeplace.postsandroidapp.feature_explore.data.network.dtos.PostDto
-import kotlinx.collections.immutable.PersistentList
 
 interface ExploreRemoteDataSource {
     suspend fun fetchPosts(): Result<List<PostDto>, DataError.Network>
