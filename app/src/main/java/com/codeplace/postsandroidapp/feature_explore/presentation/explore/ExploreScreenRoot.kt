@@ -45,8 +45,8 @@ fun ExplorePostsScreenRoot(
     onSearchBarClick: () -> Unit = { exploreViewModel.loadRecentPostSearches() },
     bottomPadding: Dp,
     onRecentSearchItemClick: (String) -> Unit = { exploreViewModel.onSearch(it) },
-    onGoBackClick: () -> Unit = { exploreViewModel.loadPosts() },
-    onFavoriteClick: (Post) -> Unit = { exploreViewModel.savePost(it) }
+    onGoBackClick: () -> Unit = { exploreViewModel.loadAllPosts() },
+    onFavoriteClick: (Post) -> Unit = { exploreViewModel.updateFavouritePostState(it) },
 ) {
 
 
@@ -55,10 +55,9 @@ fun ExplorePostsScreenRoot(
 
     val isSearchContentLoading by exploreViewModel.isSearchContentLoading.collectAsState()
     val isLoading by exploreViewModel.isLoading.collectAsState()
-    val posts by exploreViewModel.posts.collectAsState()
+    val posts by exploreViewModel.allPosts.collectAsState()
     val errorMessage by exploreViewModel.errorMessage.collectAsState()
     val recentWordSearches by exploreViewModel.recentSearches.collectAsState()
-    val snackErrorMessage = errorMessage.asString()
     val context = LocalContext.current
 
     LaunchedEffect(true) {
@@ -87,7 +86,7 @@ fun ExplorePostsScreenRoot(
             )
         } else {
             PostsScreen(
-                postEntities = posts,
+                posts = posts,
                 errorMessage = errorMessage.asString(),
                 recentWordSearches = recentWordSearches,
                 isSearchLoading = isSearchContentLoading,
@@ -96,7 +95,8 @@ fun ExplorePostsScreenRoot(
                 onSearch = onSearch,
                 onSearchBarClick = onSearchBarClick,
                 onRecentSearchItemClick = onRecentSearchItemClick,
-                onGoBackClick = onGoBackClick
+                onGoBackClick = onGoBackClick,
+
             )
         }
     }
@@ -107,7 +107,7 @@ fun ExplorePostsScreenRoot(
 @Composable
 fun PostsScreen(
     modifier: Modifier = Modifier,
-    postEntities: List<Post>,
+    posts: List<Post>,
     errorMessage: String?,
     recentWordSearches: List<String>,
     isSearchLoading: Boolean,
@@ -116,7 +116,7 @@ fun PostsScreen(
     onSearchBarClick: () -> Unit,
     onRecentSearchItemClick: (String) -> Unit,
     onGoBackClick: () -> Unit = {},
-    onFavoriteClick: (Post) -> Unit
+    onFavoriteClick: (Post) -> Unit,
 ) {
 
     val textFieldState = rememberTextFieldState()
@@ -143,7 +143,7 @@ fun PostsScreen(
             )
         }
 
-        if (postEntities.isEmpty()) {
+        if (posts.isEmpty()) {
             NoResultFoundContent(onGoBackClick = onGoBackClick)
         } else {
             LazyColumn(
@@ -162,11 +162,13 @@ fun PostsScreen(
                     }
                 }
 
-                items(postEntities) { post ->
+                items(posts) { post ->
                     PostCard(
                         post = post,
                         onCardClick = onCardClick,
-                        onFavoriteClick = { onFavoriteClick(post) }
+                        onFavoriteClick = { post ->
+                            onFavoriteClick(post)
+                        } ,
                     )
                     Spacer(Modifier.size(8.dp))
                 }
@@ -174,13 +176,6 @@ fun PostsScreen(
         }
     }
 }
-
-@Composable
-private fun GetStringResource(){
-
-}
-
-
 
 
 

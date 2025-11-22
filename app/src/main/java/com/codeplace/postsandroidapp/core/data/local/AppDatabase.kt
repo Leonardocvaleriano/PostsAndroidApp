@@ -1,4 +1,4 @@
-package com.codeplace.postsandroidapp.core.data.remote
+package com.codeplace.postsandroidapp.core.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

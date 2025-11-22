@@ -119,7 +119,7 @@ fun DefaultSearchBar(
                         leadingIcon = {
                             if (expanded) {
                                 IconAction(
-                                    iconElement = {
+                                    content = {
                                         Icon(
                                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
                                             contentDescription = null,

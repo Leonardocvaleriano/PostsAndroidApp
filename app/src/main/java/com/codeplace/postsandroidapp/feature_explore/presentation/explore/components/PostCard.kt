@@ -5,11 +5,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -21,7 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,14 +42,22 @@ fun PosdCardPreview() {
                 post = mockPostEntityCard,
                 onCardClick = {},
                 showFavoriteIcon = true,
-                onFavoriteClick = {}
-
+                onFavoriteClick = {},
 
             )
             PostCard(
                 post = mockPostEntityCard,
                 onCardClick = {},
-                onFavoriteClick = {}
+                showFavoriteIcon = true,
+                onFavoriteClick = {},
+
+            )
+            PostCard(
+                post = mockPostEntityCard,
+                onCardClick = {},
+                onFavoriteClick = {},
+                showFavoriteIcon = false,
+
 
                 )
         }
@@ -61,9 +70,9 @@ fun PosdCardPreview() {
 fun PostCard(
     modifier: Modifier = Modifier,
     post: Post,
+    onFavoriteClick: (post: Post) -> Unit,
     onCardClick: (postId: Int) -> Unit,
     showFavoriteIcon: Boolean = true,
-    onFavoriteClick:(post: Post) -> Unit
 ) {
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -94,42 +103,53 @@ fun PostCard(
                     .fillMaxWidth(),
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd){
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            modifier = Modifier
+                                .weight(1f),
+                            text = post.title.replaceFirstChar {
+                                it.uppercase()
+                            },
+                            lineHeight = 24.sp,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Start,
+                            maxLines = 1
+                        )
                         if (showFavoriteIcon) {
-                            IconAction(
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .clip(CircleShape)
-                                ,
-                                showBackground = false,
-                                iconElement = {
-                                    Icon(
-                                        imageVector = Icons.Default.FavoriteBorder,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                },
-                                onClick = {
-                                    onFavoriteClick(post)
-                                }
-
-                            )
+                            if (post.isFavourite) {
+                                IconAction(
+                                    modifier = Modifier.size(32.dp),
+                                    onClick = {
+                                        onFavoriteClick(post)
+                                    },
+                                    content = {
+                                        Icon(
+                                            imageVector = Icons.Filled.Favorite,
+                                            contentDescription = null,
+                                            tint = Color.Red,
+                                        )
+                                    }
+                                )
+                            } else {
+                                IconAction(
+                                    modifier = Modifier.size(32.dp),
+                                    onClick = {
+                                        onFavoriteClick(post)
+                                    },
+                                    content = {
+                                        Icon(
+                                            imageVector = Icons.Default.FavoriteBorder,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
+                                )
+                            }
                         }
                     }
 
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 48.dp),
-                        text = post.title.replaceFirstChar {
-                            it.uppercase()
-                        },
-                        lineHeight = 24.sp,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Start,
-                        maxLines = 1
-                    )
+
                 }
                 Text(
                     modifier = Modifier
@@ -143,13 +163,16 @@ fun PostCard(
                     softWrap = true,
                     textAlign = TextAlign.Start
                 )
+
+
             }
 
-
         }
+
 
     }
 
 }
+
 
 

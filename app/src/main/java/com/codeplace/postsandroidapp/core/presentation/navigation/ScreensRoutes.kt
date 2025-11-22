@@ -11,7 +11,7 @@ sealed interface ScreenRoutes {
     data object Explore : ScreenRoutes
 
     @Serializable
-    data object Favorites : ScreenRoutes
+    data object Favourites : ScreenRoutes
 
     @Serializable
     data class Comments(val postId: Int) : ScreenRoutes

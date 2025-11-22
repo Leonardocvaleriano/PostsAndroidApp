@@ -24,10 +24,10 @@ enum class BottomNavigation(
         route = ScreenRoutes.Explore
     ),
     FAVORITES(
-        label = R.string.bottom_navigation_label_favorites,
+        label = R.string.favourites,
         iconFilled = Icons.Filled.Favorite,
         iconOutlined = Icons.Outlined.FavoriteBorder,
-        ScreenRoutes.Favorites
+        ScreenRoutes.Favourites
     ),
     SETTINGS (
        label = R.string.bottom_navigation_label_settings,

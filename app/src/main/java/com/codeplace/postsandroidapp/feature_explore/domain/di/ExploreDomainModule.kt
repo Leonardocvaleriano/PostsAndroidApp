@@ -1,11 +1,12 @@
 package com.codeplace.postsandroidapp.feature_explore.domain.di
 
 import com.codeplace.postsandroidapp.feature_explore.domain.repository.ExploreRepository
+import com.codeplace.postsandroidapp.feature_explore.domain.use_case.DeleteFavouritePostUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetCommentsUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostsUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetSavedPostUseCase
-import com.codeplace.postsandroidapp.feature_explore.domain.use_case.SavePostUseCase
+import com.codeplace.postsandroidapp.feature_explore.domain.use_case.SaveFavouritePostUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,8 +44,13 @@ object ExploreDomainModule {
 
     @Provides
     @Singleton
-    fun provideSavePostUseCase(repository: ExploreRepository): SavePostUseCase{
-        return SavePostUseCase(repository)
+    fun provideSavePostUseCase(repository: ExploreRepository): SaveFavouritePostUseCase{
+        return SaveFavouritePostUseCase(repository)
+    }
+    @Provides
+    @Singleton
+    fun provideDeleteFavouritePostUseCase(repository: ExploreRepository): DeleteFavouritePostUseCase{
+        return DeleteFavouritePostUseCase(repository)
     }
 
 

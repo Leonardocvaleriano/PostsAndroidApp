@@ -4,5 +4,6 @@ data class Post(
     val id: Int,
     val title: String,
     val body: String,
-    val userId: Int
+    val userId: Int,
+    val isFavourite: Boolean = false
 )

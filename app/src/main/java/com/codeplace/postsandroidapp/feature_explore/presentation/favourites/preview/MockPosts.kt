@@ -1,4 +1,4 @@
-package com.codeplace.postsandroidapp.feature_favorites.presentation.preview
+package com.codeplace.postsandroidapp.feature_explore.presentation.favourites.preview
 
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 

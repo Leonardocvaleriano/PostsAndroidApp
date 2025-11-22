@@ -33,7 +33,7 @@ private fun DefaultTopAppBarPreview() {
             navigationElement = {
                 IconAction(
                     onClick = {},
-                    iconElement = {
+                    content = {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Search Icon",
@@ -48,7 +48,7 @@ private fun DefaultTopAppBarPreview() {
             trailingActions = {
                 IconAction(
                     onClick = {},
-                    iconElement = {
+                    content = {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = "Search Icon",
@@ -60,7 +60,7 @@ private fun DefaultTopAppBarPreview() {
                 Spacer(modifier = Modifier.size(12.dp))
                 IconAction(
                     onClick = {},
-                    iconElement = {
+                    content = {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = "Search Icon",

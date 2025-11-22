@@ -1,7 +1,6 @@
 package com.codeplace.postsandroidapp.feature_explore.presentation.comments
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.codeplace.postsandroidapp.R
 import com.codeplace.postsandroidapp.core.presentation.components.DefaultTopAppBar
 import com.codeplace.postsandroidapp.core.presentation.components.IconAction
@@ -68,7 +66,7 @@ fun CommentsScreenRoot(
                         onClick = {
                             onBackClick()
                         },
-                        iconElement = {
+                        content = {
                             Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
@@ -157,7 +155,7 @@ fun CommentsScreen(
                         showFavoriteIcon = false,
                         post = post,
                         onCardClick = {},
-                        onFavoriteClick = {}
+                        onFavoriteClick = {},
 
                     )
                     Spacer(

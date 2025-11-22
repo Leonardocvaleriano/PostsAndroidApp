@@ -3,7 +3,7 @@ package com.codeplace.postsandroidapp.feature_explore.data.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
-import com.codeplace.postsandroidapp.core.data.remote.AppDatabase
+import com.codeplace.postsandroidapp.core.data.local.AppDatabase
 import com.codeplace.postsandroidapp.feature_explore.data.datasources.ExploreLocalDataSource
 import com.codeplace.postsandroidapp.feature_explore.data.datasources.ExploreLocalDataSourceImpl
 import com.codeplace.postsandroidapp.feature_explore.data.datasources.ExploreRemoteDataSource

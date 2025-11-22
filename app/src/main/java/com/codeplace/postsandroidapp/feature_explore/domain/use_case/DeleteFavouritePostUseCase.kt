@@ -6,10 +6,10 @@ import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.domain.repository.ExploreRepository
 import javax.inject.Inject
 
-class SavePostUseCase @Inject constructor(
-    private val exploreRepository: ExploreRepository
+class DeleteFavouritePostUseCase @Inject constructor(
+    val repository: ExploreRepository
 ) {
-
-    suspend operator fun invoke(post: Post): Result<Unit, DataError.Local> = exploreRepository.savePost(post = post)
-
+    suspend operator fun invoke(post: Post): Result<Unit, DataError.Local> {
+        return repository.deleteFavouritePost(post = post)
+    }
 }

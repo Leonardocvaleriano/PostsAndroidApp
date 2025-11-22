@@ -16,7 +16,7 @@ import com.codeplace.postsandroidapp.core.presentation.components.DefaultBottomA
 import com.codeplace.postsandroidapp.feature_explore.presentation.comments.CommentsScreenRoot
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.ExplorePostsScreenRoot
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.ExploreViewModel
-import com.codeplace.postsandroidapp.feature_favorites.presentation.FavoritesScreenRoot
+import com.codeplace.postsandroidapp.feature_explore.presentation.favourites.FavoritesScreenRoot
 import com.codeplace.postsandroidapp.feature_settings.presentation.screens.theme.ThemeViewModel
 import com.codeplace.postsandroidapp.feature_settings.presentation.screens.settings.SettingsScreenRoot
 import com.codeplace.postsandroidapp.feature_settings.presentation.screens.theme.ThemeScreenRoot
@@ -31,7 +31,7 @@ fun NavigationRoot() {
 
     val isBottomAppBarVisible = when (screenRoutes) {
         ScreenRoutes.Explore::class.qualifiedName -> true
-        ScreenRoutes.Favorites::class.qualifiedName -> true
+        ScreenRoutes.Favourites::class.qualifiedName -> true
         ScreenRoutes.Settings::class.qualifiedName -> true
         else -> false
     }
@@ -83,7 +83,7 @@ fun NavigationRoot() {
                     )
                 }
 
-                composable<ScreenRoutes.Favorites> {
+                composable<ScreenRoutes.Favourites> {
                     FavoritesScreenRoot(
                         bottomBarPadding = innerPaddings.calculateBottomPadding()
                     )

@@ -11,8 +11,7 @@
     <string name="light">Light</string>
     <string name="profile_content_description">Profile Image</string>
     <string name="top_bar_title_posts">Posts</string>
-    <string name="top_bar_title_favorites">Favorites</string>
-    <string name="title_favourites">Favourites</string>
+    <string name="favourites">Favorites</string>
     <string name="settings_menu_item_night_mode">Night mode</string>
     <string name="edit_icon_text">Edit</string>
     <string name="top_bar_title_theme">Theme</string>
@@ -33,7 +32,8 @@
     <string name="corruption_error">Data corruption detected. Please restart the app or clear app data.</string>
     <string name="key_not_found">Required data could not be found. Please try again later.</string>
     <string name="unknown_error">An unknown error occurred. Please try again.</string>
-    <string name="post_successfully_saved">Post successfully saved</string>
+    <string name="post_saved">Post saved</string>
+    <string name="post_deleted">Post deleted</string>
     <string name="no_result_found">No result found</string>
     <string name="recent_post_searches">Recent post searches</string>
 

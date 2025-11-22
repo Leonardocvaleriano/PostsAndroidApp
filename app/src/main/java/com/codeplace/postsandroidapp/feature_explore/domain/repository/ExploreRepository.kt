@@ -5,6 +5,7 @@ import com.codeplace.postsandroidapp.core.domain.Result
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Comment
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.domain.models.SearchHistory
+import kotlinx.coroutines.flow.Flow
 
 interface ExploreRepository {
     suspend fun getPosts(): Result<List<Post>, DataError.Network>
@@ -15,6 +16,8 @@ interface ExploreRepository {
 
     suspend fun getRecentPostSearches(): Result<SearchHistory, DataError.Local>
 
-    suspend fun savePost(post: Post): Result<Unit, DataError.Local>
-    suspend fun getSavedPost(): Result<List<Post>, DataError.Local>
+    suspend fun saveFavouritePost(post: Post): Result<Unit, DataError.Local>
+    suspend fun getFavouritePosts(): Result<Flow<List<Post>>, DataError.Local>
+
+    suspend fun deleteFavouritePost(post: Post): Result<Unit, DataError.Local>
 }

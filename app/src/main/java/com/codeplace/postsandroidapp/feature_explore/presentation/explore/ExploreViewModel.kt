@@ -11,15 +11,21 @@ import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.domain.models.SearchHistory
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostsUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetRecentWordSearchesUseCase
-import com.codeplace.postsandroidapp.feature_explore.domain.use_case.SavePostUseCase
+import com.codeplace.postsandroidapp.feature_explore.domain.use_case.SaveFavouritePostUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.SaveRecentPostSearchesUseCase
 import com.codeplace.postsandroidapp.core.presentation.screens.toUiText
+import com.codeplace.postsandroidapp.feature_explore.domain.use_case.DeleteFavouritePostUseCase
+import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetSavedPostUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,7 +34,9 @@ class ExploreViewModel @Inject constructor(
     val getPostsUseCase: GetPostsUseCase,
     val saveRecentSearch: SaveRecentPostSearchesUseCase,
     val getSavedSearchHistory: GetRecentWordSearchesUseCase,
-    val savePostUseCase: SavePostUseCase
+    val saveFavouritePostUseCase: SaveFavouritePostUseCase,
+    val getSavedPostUseCase: GetSavedPostUseCase,
+    val deleteFavouritePostUseCase: DeleteFavouritePostUseCase
 ) : ViewModel() {
 
     private val _uiEvent = MutableSharedFlow<ExploreUiEvent>()
@@ -45,33 +53,70 @@ class ExploreViewModel @Inject constructor(
     val isSearchContentLoading: StateFlow<Boolean> = _isSearchContentLoading.asStateFlow()
 
 
-    private val _posts = MutableStateFlow(emptyList<Post>())
-    val posts: StateFlow<List<Post>> = _posts.asStateFlow()
+    private val _allPosts = MutableStateFlow(emptyList<Post>())
+    val allPosts: StateFlow<List<Post>> = _allPosts.asStateFlow()
+
+    private var _savedPosts = MutableStateFlow<List<Post>>(emptyList<Post>())
 
     private val _errorMessage = MutableStateFlow<UiText>(UiText.DynamicString(""))
     val errorMessage: StateFlow<UiText> = _errorMessage.asStateFlow()
 
-    private var fullPostEntityList: List<Post> = emptyList()
 
     private val _recentSearches = MutableStateFlow<List<String>>(emptyList())
     val recentSearches = _recentSearches.asStateFlow()
 
+    init {
+        loadAllPosts()
 
-    fun savePost(post: Post) = viewModelScope.launch(Dispatchers.IO) {
+    }
 
-        savePostUseCase.invoke(post)
-            .onSuccess {
-                _uiEvent.emit(ExploreUiEvent.ShowSnackBar(messsage = UiText.StringResourceId(R.string.post_successfully_saved)))
+    fun updateFavouritePostState(post: Post) = viewModelScope.launch {
+
+        getSavedPosts()
+        val savedPosts = _savedPosts.first()
+        val isPostSaved = savedPosts.any { it.id == post.id }
+
+        if (isPostSaved) {
+            deleteFavouritePostUseCase(post)
+                .onSuccess {
+                    _allPosts.value = _allPosts.value.map { current ->
+                        if (current.id == post.id) current.copy(isFavourite = false)
+                        else current
+                    }
+                }
+                .onError { error ->
+                    _uiEvent.emit(ExploreUiEvent.ShowSnackBar(messsage = error.toUiText()))
+                }
+        } else {
+            saveFavouritePostUseCase(post)
+                .onSuccess {
+                    _allPosts.value = _allPosts.value.map { current ->
+                        if (current.id == post.id) current.copy(isFavourite = true)
+                        else current
+                    }
+                }
+                .onError { error ->
+                    _uiEvent.emit(ExploreUiEvent.ShowSnackBar(messsage = error.toUiText()))
+                }
+        }
+    }
+
+
+    private fun getSavedPosts()  = viewModelScope.launch {
+        getSavedPostUseCase.invoke()
+            .onSuccess { flow ->
+                flow.collect { savedPosts ->
+                    _savedPosts.value = savedPosts
+                }
             }
-            .onError { errorMessage ->
-                _uiEvent.emit(ExploreUiEvent.ShowSnackBar(messsage = errorMessage.toUiText()))
-            }
+            .onError { }
     }
 
     fun onSearch(query: String) {
 
         if (query.isBlank() || query.isEmpty()) {
-            loadPosts()
+            loadAllPosts()
+
         }
         saveQueryToHistory(query = query)
         filterPosts(query = query)
@@ -95,12 +140,8 @@ class ExploreViewModel @Inject constructor(
 
     }
 
-    init {
-        loadPosts()
-    }
 
-
-    fun loadRecentPostSearches() = viewModelScope.launch(Dispatchers.IO) {
+    fun loadRecentPostSearches() = viewModelScope.launch {
         _isSearchContentLoading.value = true
         getSavedSearchHistory.invoke()
             .onSuccess { history ->
@@ -114,27 +155,45 @@ class ExploreViewModel @Inject constructor(
 
 
     private fun filterPosts(query: String) {
-        val filteredPosts = fullPostEntityList.filter { post ->
+        val filteredPosts = allPosts.value.filter { post ->
             post.title.contains(query, ignoreCase = true) ||
                     post.body.contains(query, ignoreCase = true)
         }
-        _posts.value = filteredPosts
+        _allPosts.value = filteredPosts
 
     }
 
-    fun loadPosts() = viewModelScope.launch(Dispatchers.IO) {
+    fun loadAllPosts() = viewModelScope.launch {
+
         _isLoading.value = true
-        getPostsUseCase()
-            .onSuccess { posts ->
-                fullPostEntityList = posts
-                _posts.value = posts
-                _isLoading.value = false
-            }
-            .onError { error ->
-                _errorMessage.value = error.toUiText()
-                _isLoading.value = false
-            }
+        val postsResultDeferred = async { getPostsUseCase() }
+        val savedPostResultDeferred = async { getSavedPostUseCase() }
 
+        val postResult = postsResultDeferred.await()
+        val savedPostResult = savedPostResultDeferred.await()
+
+        postResult.onSuccess { postsList ->
+            savedPostResult.onSuccess { savedPostsFlow ->
+                savedPostsFlow.collect { savedPosts ->
+                    val savedIds = savedPosts.map { it.id }.toSet()
+
+                    val allPostsMapped = postsList.map { post ->
+                        post.copy(isFavourite = post.id in savedIds)
+                    }
+
+                    _allPosts.value = allPostsMapped
+                    _isLoading.value = false
+
+                }
+            }
+                .onError { errorMessage ->
+                    _errorMessage.value = errorMessage.toUiText()
+                    _isLoading.value = false
+                }
+
+
+
+
+        }
     }
-
 }

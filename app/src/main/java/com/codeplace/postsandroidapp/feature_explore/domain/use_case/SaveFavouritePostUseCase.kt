@@ -4,13 +4,12 @@ import com.codeplace.postsandroidapp.core.domain.DataError
 import com.codeplace.postsandroidapp.core.domain.Result
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.domain.repository.ExploreRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetSavedPostUseCase @Inject constructor(
+class SaveFavouritePostUseCase @Inject constructor(
     private val exploreRepository: ExploreRepository
 ) {
 
-    suspend operator fun invoke(): Result<Flow<List<Post>>, DataError.Local> = exploreRepository.getFavouritePosts()
+    suspend operator fun invoke(post: Post): Result<Unit, DataError.Local> = exploreRepository.saveFavouritePost(post = post)
 
 }

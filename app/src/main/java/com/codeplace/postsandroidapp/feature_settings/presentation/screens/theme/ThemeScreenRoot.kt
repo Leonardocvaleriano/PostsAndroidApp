@@ -78,7 +78,7 @@ fun ThemeScreen(
                     onClick = {
                         onBackClick()
                     },
-                    iconElement = {
+                    content = {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = null,

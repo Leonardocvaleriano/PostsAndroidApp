@@ -11,6 +11,10 @@ import com.codeplace.postsandroidapp.feature_explore.domain.models.Comment
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.domain.models.SearchHistory
 import com.codeplace.postsandroidapp.feature_explore.domain.repository.ExploreRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 class ExploreRepositoryImpl(
     private val exploreRemoteDataSource: ExploreRemoteDataSource,
@@ -18,37 +22,55 @@ class ExploreRepositoryImpl(
 ) : ExploreRepository {
 
     override suspend fun getPosts(): Result<List<Post>, DataError.Network> {
-        return exploreRemoteDataSource.fetchPosts().map { postsDto -> postsDto.toDomain() }
+        return withContext(Dispatchers.IO) {
+            exploreRemoteDataSource.fetchPosts().map { postsDto -> postsDto.toDomain() }
+        }
     }
 
     override suspend fun getComments(postId: Int): Result<List<Comment>, DataError.Network> {
-        return exploreRemoteDataSource.fetchComments(postId)
-            .map { commentsDto -> commentsDto.toDomain() }
+        return withContext(Dispatchers.IO) {
+            exploreRemoteDataSource.fetchComments(postId)
+                .map { commentsDto -> commentsDto.toDomain() }
+        }
     }
 
     override suspend fun getPost(postId: Int): Result<Post, DataError.Network> {
-
-        return exploreRemoteDataSource.fetchPost(postId).map { postDto ->
-            postDto.toDomain()
+        return withContext(Dispatchers.IO){
+            exploreRemoteDataSource.fetchPost(postId).map { postDto ->
+                postDto.toDomain()
+        }
         }
     }
 
     override suspend fun saveRecentPostSearches(searchHistory: SearchHistory) {
-
-        return exploreLocalDataSource.saveRecentPostSearches(
-            searchHistory = searchHistory.toEntity()
-        )
+        return  withContext(Dispatchers.IO) {
+            exploreLocalDataSource.saveRecentPostSearches(
+                searchHistory = searchHistory.toEntity()
+            )
+        }
     }
 
     override suspend fun getRecentPostSearches(): Result<SearchHistory, DataError.Local> {
-        return exploreLocalDataSource.getRecentPostSearches().map { it.toDomain() }
+        return withContext(Dispatchers.IO){
+            exploreLocalDataSource.getRecentPostSearches().map { it.toDomain() }
+        }
     }
 
-    override suspend fun savePost(post: Post): Result<Unit, DataError.Local> {
-        return exploreLocalDataSource.savePost(post = post.toEntity())
+    override suspend fun saveFavouritePost(post: Post): Result<Unit, DataError.Local> {
+        return withContext(Dispatchers.IO){
+            exploreLocalDataSource.saveFavouritePost(post = post.toEntity())
+        }
     }
 
-    override suspend fun getSavedPost(): Result<List<Post>, DataError.Local> {
-        return exploreLocalDataSource.getSavedPosts().map { it.toDomain() }
+    override suspend fun getFavouritePosts(): Result<Flow<List<Post>>, DataError.Local> {
+        return withContext(Dispatchers.IO){
+            exploreLocalDataSource.getSavedFavourites().map { it.map { savedFavouritePosts -> savedFavouritePosts.toDomain() } }
+        }
+    }
+
+    override suspend fun deleteFavouritePost(post: Post): Result<Unit, DataError.Local> {
+        return withContext(Dispatchers.IO){
+            exploreLocalDataSource.deleteFavouritePost(post = post.toEntity())
+        }
     }
 }

@@ -30,8 +30,9 @@ private fun IconActionPreview() {
     Column {
         IconAction(
             onClick = {},
-            iconElement = {
+            content = {
                 Icon(
+
                     imageVector = Icons.Default.FavoriteBorder,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -40,9 +41,10 @@ private fun IconActionPreview() {
 
         )
         IconAction(
+            modifier = Modifier.size(32.dp),
             showBackground = true,
             onClick = {},
-            iconElement = {
+            content = {
                 Icon(
                     imageVector = Icons.Default.FavoriteBorder,
                     contentDescription = null,
@@ -58,37 +60,28 @@ private fun IconActionPreview() {
 
 @Composable
 fun IconAction(
-    modifier: Modifier = Modifier,
-    iconElement: @Composable (() -> Unit) = {},
-    onClick:() -> Unit,
-    showBackground: Boolean = false
+    modifier: Modifier = Modifier.size(48.dp),   // default size here
+    onClick: () -> Unit,
+    showBackground: Boolean = false,
+    content: @Composable () -> Unit,
 ) {
-
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
-
     val backgroundColor by animateColorAsState(
-        targetValue = if (isPressed) MaterialTheme.colorScheme.surfaceContainerHighest else if (showBackground){
-            MaterialTheme.colorScheme.surfaceContainer
-        } else { Color.Unspecified},
+        targetValue = if (isPressed) MaterialTheme.colorScheme.surfaceContainerHighest
+        else if (showBackground) MaterialTheme.colorScheme.surfaceContainer
+        else Color.Unspecified,
         label = "backgroundIconActionColor"
     )
 
     Box(
         modifier = modifier
             .clip(CircleShape)
-            .clickable(
-                onClick = { onClick() })
-            .size(48.dp)
-            .background(backgroundColor)
-            ,
+            .clickable(onClick = onClick)
+            .background(backgroundColor),
         contentAlignment = Alignment.Center,
-
-
-    ){
-        iconElement()
-
+    ) {
+        content()
     }
-
 }

@@ -1,4 +1,4 @@
-package com.codeplace.postsandroidapp.feature_favorites.presentation
+package com.codeplace.postsandroidapp.feature_explore.presentation.favourites
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,6 +9,7 @@ import com.codeplace.postsandroidapp.core.presentation.util.UiText
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetSavedPostUseCase
 import com.codeplace.postsandroidapp.core.presentation.screens.toUiText
+import com.codeplace.postsandroidapp.feature_explore.domain.use_case.DeleteFavouritePostUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +18,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FavoritesViewModel @Inject constructor(
-    val getSavedPostUseCase: GetSavedPostUseCase
+class FavouritesViewModel @Inject constructor(
+    val getSavedPostUseCase: GetSavedPostUseCase,
+    val deleteFavouritePostUseCase: DeleteFavouritePostUseCase
 ) : ViewModel() {
 
 
@@ -35,13 +37,31 @@ class FavoritesViewModel @Inject constructor(
         loadSavedPosts()
     }
 
-    private fun loadSavedPosts() = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteFavouritePost(post: Post) {
+        _isLoading.value = true
+        viewModelScope.launch {
+            deleteFavouritePostUseCase.invoke(post)
+                .onSuccess {
+                    _isLoading.value = false
+                }
+                .onError {
+                    _isLoading.value = false
+                }
+        }
+
+
+    }
+
+    private fun loadSavedPosts() = viewModelScope.launch {
         _isLoading.value = true
         getSavedPostUseCase.invoke()
             .onSuccess { savedPosts ->
-                Log.d("FavoritesViewModel", "Success, savedPosts: ${savedPosts}")
-
-                _favoritePosts.value = savedPosts
+                savedPosts.collect { savedPosts ->
+                    val savedPostsWithFav = savedPosts.map { post ->
+                        post.copy(isFavourite =  true)
+                    }
+                    _favoritePosts.value = savedPostsWithFav
+                }
                 _isLoading.value = false
             }
             .onError { errorMessage ->

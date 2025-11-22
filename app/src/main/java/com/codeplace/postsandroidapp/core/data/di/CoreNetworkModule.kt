@@ -26,13 +26,17 @@ data object CoreNetworkModule{
     @Singleton
     fun provideHttpClient(): HttpClient {
         return HttpClient(Android) {
+            engine {
+                connectTimeout = 10_000
+                socketTimeout = 10_000
+            }
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
                         Log.d("HttpClient:", message)
                     }
                 }
-                level = LogLevel.BODY
+                level = LogLevel.ALL
             }
             install(ContentNegotiation) {
                 json(
