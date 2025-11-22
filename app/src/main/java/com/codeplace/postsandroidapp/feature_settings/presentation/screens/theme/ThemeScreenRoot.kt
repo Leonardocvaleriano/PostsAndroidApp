@@ -20,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codeplace.postsandroidapp.R
 import com.codeplace.postsandroidapp.core.presentation.components.DefaultTopAppBar
+import com.codeplace.postsandroidapp.core.presentation.components.IconAction
+import com.codeplace.postsandroidapp.core.presentation.components.IconContainer
 import com.codeplace.postsandroidapp.feature_settings.domain.AppTheme
 import com.example.compose.PostsAndroidAppTheme
 
@@ -72,17 +74,18 @@ fun ThemeScreen(
     Column {
         DefaultTopAppBar(
             navigationElement = {
-                Icon(
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .clickable {
-                            onBackClick()
-
-                        },
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Search Icon",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                IconAction(
+                    onClick = {
+                        onBackClick()
+                    },
+                    iconElement = {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = null,
+                            )
+                    }
                 )
+
             },
             content = {
                 Text(

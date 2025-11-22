@@ -12,7 +12,7 @@
     <string name="profile_content_description">Profile Image</string>
     <string name="top_bar_title_posts">Posts</string>
     <string name="top_bar_title_favorites">Favorites</string>
-    <string name="title_favorites">Favorites</string>
+    <string name="title_favourites">Favourites</string>
     <string name="settings_menu_item_night_mode">Night mode</string>
     <string name="edit_icon_text">Edit</string>
     <string name="top_bar_title_theme">Theme</string>
@@ -33,10 +33,21 @@
     <string name="corruption_error">Data corruption detected. Please restart the app or clear app data.</string>
     <string name="key_not_found">Required data could not be found. Please try again later.</string>
     <string name="unknown_error">An unknown error occurred. Please try again.</string>
-
+    <string name="post_successfully_saved">Post successfully saved</string>
     <string name="no_result_found">No result found</string>
     <string name="recent_post_searches">Recent post searches</string>
 
     <string name="no_matching_item">We didn\'t find any item matching your search</string>
 
+
+    <string name="request_timed_out">Request timed out. Please try again.</string>
+    <string name="unauthorized">You are not authorized. Please log in again.</string>
+    <string name="conflict">A conflict occurred. Please refresh and try again.</string>
+    <string name="too_many_requests">Too many requests. Please wait and try again.</string>
+    <string name="no_internet">No internet connection. Check your network settings.</string>
+    <string name="payload_too_large">The request is too large to process.</string>
+    <string name="server_error">Server error. Please try again later.</string>
+    <string name="serialization">A data processing error occurred.</string>
+    <string name="unable_to_connect">Unable to connect. Please try again.</string>
+    <string name="unknown">An unknown error has occurred.</string>
 </resources>

@@ -3,12 +3,14 @@ package com.codeplace.postsandroidapp.feature_explore.data.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
+import com.codeplace.postsandroidapp.core.data.remote.AppDatabase
 import com.codeplace.postsandroidapp.feature_explore.data.datasources.ExploreLocalDataSource
 import com.codeplace.postsandroidapp.feature_explore.data.datasources.ExploreLocalDataSourceImpl
 import com.codeplace.postsandroidapp.feature_explore.data.datasources.ExploreRemoteDataSource
 import com.codeplace.postsandroidapp.feature_explore.data.datasources.ExploreRemoteDataSourceImpl
-import com.codeplace.postsandroidapp.feature_explore.data.local.entity.SearchHistoryEntity
-import com.codeplace.postsandroidapp.feature_explore.data.local.SearchHistorySerializer
+import com.codeplace.postsandroidapp.feature_explore.data.local.datastore.entity.SearchHistoryEntity
+import com.codeplace.postsandroidapp.feature_explore.data.local.datastore.SearchHistorySerializer
+import com.codeplace.postsandroidapp.feature_explore.data.local.room.PostDao
 import com.codeplace.postsandroidapp.feature_explore.data.repository.ExploreRepositoryImpl
 import com.codeplace.postsandroidapp.feature_explore.domain.repository.ExploreRepository
 import dagger.Module
@@ -26,7 +28,7 @@ object ExploreDataModule {
 
     @Provides
     @Singleton
-    fun provideRemoteDataSource(
+    fun provideExploreRemoteDataSource(
         httpClient: HttpClient
     ): ExploreRemoteDataSource {
         return ExploreRemoteDataSourceImpl(httpClient = httpClient)
@@ -36,17 +38,34 @@ object ExploreDataModule {
         fileName = "ssearch_history.json",
         serializer = SearchHistorySerializer,
     )
+
     @Provides
     @Singleton
-    fun provideProtoDataStore(
-        @ApplicationContext context: Context): DataStore<SearchHistoryEntity>{
+    fun provideExploreProtoDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<SearchHistoryEntity> {
         return context.dataStore
+    }
+
+
+    @Provides
+    @Singleton
+    fun providePostDao(
+        db: AppDatabase
+    ): PostDao {
+        return db.postDao()
     }
 
     @Provides
     @Singleton
-    fun provideLocalDataSource(dataStore: DataStore<SearchHistoryEntity>): ExploreLocalDataSource {
-        return ExploreLocalDataSourceImpl(dataStore = dataStore)
+    fun provideExploreLocalDataSource(
+        dataStore: DataStore<SearchHistoryEntity>,
+        postDao: PostDao
+    ): ExploreLocalDataSource {
+        return ExploreLocalDataSourceImpl(
+            dataStore = dataStore,
+            postDao = postDao
+        )
     }
 
     @Provides
@@ -60,7 +79,6 @@ object ExploreDataModule {
             exploreLocalDataSource = exploreLocalDataSource
         )
     }
-
 
 
 }

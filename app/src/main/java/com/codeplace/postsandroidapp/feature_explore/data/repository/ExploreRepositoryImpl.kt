@@ -43,4 +43,12 @@ class ExploreRepositoryImpl(
     override suspend fun getRecentPostSearches(): Result<SearchHistory, DataError.Local> {
         return exploreLocalDataSource.getRecentPostSearches().map { it.toDomain() }
     }
+
+    override suspend fun savePost(post: Post): Result<Unit, DataError.Local> {
+        return exploreLocalDataSource.savePost(post = post.toEntity())
+    }
+
+    override suspend fun getSavedPost(): Result<List<Post>, DataError.Local> {
+        return exploreLocalDataSource.getSavedPosts().map { it.toDomain() }
+    }
 }

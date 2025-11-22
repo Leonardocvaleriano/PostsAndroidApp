@@ -1,4 +1,4 @@
-package com.codeplace.postsandroidapp.feature_explore.data.local.entity
+package com.codeplace.postsandroidapp.feature_explore.data.local.datastore.entity
 
 import kotlinx.serialization.Serializable
 

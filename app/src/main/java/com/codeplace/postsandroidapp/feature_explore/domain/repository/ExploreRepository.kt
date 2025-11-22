@@ -14,4 +14,7 @@ interface ExploreRepository {
     suspend fun saveRecentPostSearches(searchHistory: SearchHistory)
 
     suspend fun getRecentPostSearches(): Result<SearchHistory, DataError.Local>
+
+    suspend fun savePost(post: Post): Result<Unit, DataError.Local>
+    suspend fun getSavedPost(): Result<List<Post>, DataError.Local>
 }

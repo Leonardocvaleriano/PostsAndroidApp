@@ -4,6 +4,7 @@ import android.sax.Element
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -29,21 +30,45 @@ import androidx.compose.ui.unit.dp
 private fun DefaultTopAppBarPreview() {
     MaterialTheme {
         DefaultTopAppBar(
+            navigationElement = {
+                IconAction(
+                    onClick = {},
+                    iconElement = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Search Icon",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    })
+
+            },
             content = {
                 Text("Title")
             },
             trailingActions = {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Send,
-                    contentDescription = "Search Icon",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                IconAction(
+                    onClick = {},
+                    iconElement = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Send,
+                            contentDescription = "Search Icon",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 )
+
                 Spacer(modifier = Modifier.size(12.dp))
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ScreenShare,
-                    contentDescription = "Search Icon",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                IconAction(
+                    onClick = {},
+                    iconElement = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Send,
+                            contentDescription = "Search Icon",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 )
+
             },
         )
     }
@@ -60,28 +85,31 @@ fun DefaultTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 ) {
 
-        TopAppBar(
-            navigationIcon = {
+    TopAppBar(
+        navigationIcon = {
+            Box(modifier = Modifier.padding(start = 4.dp)) {
                 navigationElement()
-            },
-            scrollBehavior = scrollBehavior,
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                titleContentColor = MaterialTheme.colorScheme.onSurface
-            ),
-            title = {
-                Box(modifier = Modifier.padding(horizontal = 4.dp)) {
-                    content()
-                }
-
-            },
-            actions = {
-                Row(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    trailingActions()
-
-                }
             }
+        },
+        scrollBehavior = scrollBehavior,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        title = {
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 4.dp, vertical = 8.dp)
+            ) {
+                content()
+            }
+        },
+        actions = {
+            Row(modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)) {
+                trailingActions()
+            }
+        }
 
-        )
+    )
 }
 

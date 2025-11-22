@@ -4,11 +4,12 @@ import DefaultSearchBar
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -16,13 +17,17 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.codeplace.postsandroidapp.core.presentation.DefaultLoadingScreen
@@ -30,75 +35,70 @@ import com.codeplace.postsandroidapp.core.presentation.screens.FeedBackCard
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.components.NoResultFoundContent
 import com.codeplace.postsandroidapp.feature_explore.presentation.explore.components.PostCard
-import com.codeplace.postsandroidapp.feature_explore.presentation.explore.previews.mockPosts
-import com.example.compose.PostsAndroidAppTheme
-import kotlin.math.exp
-
-@Preview(showBackground = true)
-@Composable
-fun PostsPreview() {
-    PostsAndroidAppTheme {
-        PostsScreen(
-            posts = mockPosts,
-            onCardClick = {},
-            commentsCount = 1,
-            onSearch = {},
-            errorMessage = "Error",
-            onSearchBarClick = { },
-            recentWordSearches = listOf("Last word searched"),
-            onRecentSearchItemClick = {},
-        )
-    }
-
-
-}
+import kotlinx.coroutines.launch
 
 @Composable
 fun ExplorePostsScreenRoot(
     exploreViewModel: ExploreViewModel,
     onCardClick: (postId: Int) -> Unit,
-    onSearch: (String) -> Unit = { query ->
-        exploreViewModel.onSearch(query)
-    },
-    onSearchBarClick: () -> Unit = {
-        exploreViewModel.loadRecentPostSearches()
-    },
+    onSearch: (String) -> Unit = { exploreViewModel.onSearch(it) },
+    onSearchBarClick: () -> Unit = { exploreViewModel.loadRecentPostSearches() },
     bottomPadding: Dp,
-    onRecentSearchItemClick: (String) -> Unit = { query ->
-        exploreViewModel.onSearch(query)
-    },
-    onGoBackClick: () -> Unit = {
-        exploreViewModel.loadPosts()
-    }
+    onRecentSearchItemClick: (String) -> Unit = { exploreViewModel.onSearch(it) },
+    onGoBackClick: () -> Unit = { exploreViewModel.loadPosts() },
+    onFavoriteClick: (Post) -> Unit = { exploreViewModel.savePost(it) }
 ) {
+
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val isSearchContentLoading by exploreViewModel.isSearchContentLoading.collectAsState()
     val isLoading by exploreViewModel.isLoading.collectAsState()
     val posts by exploreViewModel.posts.collectAsState()
     val errorMessage by exploreViewModel.errorMessage.collectAsState()
     val recentWordSearches by exploreViewModel.recentSearches.collectAsState()
+    val snackErrorMessage = errorMessage.asString()
+    val context = LocalContext.current
 
-    if (isLoading) {
-        DefaultLoadingScreen(modifier = Modifier.padding(bottom = bottomPadding))
-
-    } else {
-        PostsScreen(
-            posts = posts,
-            onCardClick = onCardClick,
-            onSearch = onSearch,
-            errorMessage = errorMessage,
-            recentWordSearches = recentWordSearches,
-            onSearchBarClick = {
-                onSearchBarClick()
-            },
-            isLoading = isSearchContentLoading,
-            onRecentSearchItemClick = { query ->
-                onRecentSearchItemClick(query)
-            },
-            onGoBackClick = {
-                onGoBackClick()
+    LaunchedEffect(true) {
+        exploreViewModel.uiEvent.collect { event ->
+            when(event){
+                is ExploreUiEvent.ShowSnackBar -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(event.messsage.asString(context))
+                    }
+                }
             }
-        )
+        }
+    }
+
+
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+        contentWindowInsets = WindowInsets.systemBars,
+        modifier = Modifier.padding(bottom = bottomPadding),
+    ) { padding ->
+        if (isLoading) {
+            DefaultLoadingScreen(
+                modifier = Modifier.padding(paddingValues = padding)
+            )
+        } else {
+            PostsScreen(
+                postEntities = posts,
+                errorMessage = errorMessage.asString(),
+                recentWordSearches = recentWordSearches,
+                isSearchLoading = isSearchContentLoading,
+                onCardClick = onCardClick,
+                onFavoriteClick = onFavoriteClick,
+                onSearch = onSearch,
+                onSearchBarClick = onSearchBarClick,
+                onRecentSearchItemClick = onRecentSearchItemClick,
+                onGoBackClick = onGoBackClick
+            )
+        }
     }
 }
 
@@ -106,92 +106,81 @@ fun ExplorePostsScreenRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostsScreen(
-    posts: List<Post>,
+    modifier: Modifier = Modifier,
+    postEntities: List<Post>,
+    errorMessage: String?,
+    recentWordSearches: List<String>,
+    isSearchLoading: Boolean,
     onCardClick: (Int) -> Unit,
     onSearch: (String) -> Unit,
     onSearchBarClick: () -> Unit,
-    commentsCount: Int? = null,
-    errorMessage: String? = null,
-    recentWordSearches: List<String>,
-    isLoading: Boolean = false,
     onRecentSearchItemClick: (String) -> Unit,
-    onGoBackClick: () -> Unit = {}
+    onGoBackClick: () -> Unit = {},
+    onFavoriteClick: (Post) -> Unit
 ) {
+
     val textFieldState = rememberTextFieldState()
-    val state = rememberLazyListState()
+    val listState = rememberLazyListState()
 
     val showSearchBar by remember {
-        derivedStateOf {
-            if (state.firstVisibleItemScrollOffset >= 30) false else true
-        }
+        derivedStateOf { listState.firstVisibleItemScrollOffset < 30 }
     }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-        topBar = {
-            Column(
-                modifier = Modifier
-            ) {
-                AnimatedVisibility(
-                    visible = showSearchBar,
-                ) {
-                    DefaultSearchBar(
-                        textFieldState = textFieldState,
-                        onSearch = { query ->
-                            onSearch(query)
-                        },
-                        searchResults = recentWordSearches,
-                        onSearchBarClick = {
-                            onSearchBarClick()
-                        },
-                        isLoading = isLoading,
-                        onRecentSearchItemClick = { query ->
-                            onRecentSearchItemClick(query)
-                        }
-                    )
-                }
-            }
-        }
-    ) { padding ->
-        if (posts.isEmpty()) {
-            NoResultFoundContent(
-                modifier = Modifier.padding(padding),
-                onGoBackClick = {
-                    onGoBackClick()
-                }
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+    ) {
+
+        AnimatedVisibility(visible = showSearchBar) {
+            DefaultSearchBar(
+                textFieldState = textFieldState,
+                searchResults = recentWordSearches,
+                isLoading = isSearchLoading,
+                onSearch = onSearch,
+                onSearchBarClick = onSearchBarClick,
+                onRecentSearchItemClick = onRecentSearchItemClick
             )
+        }
+
+        if (postEntities.isEmpty()) {
+            NoResultFoundContent(onGoBackClick = onGoBackClick)
         } else {
             LazyColumn(
+                state = listState,
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(horizontal = 16.dp)
-                ,
-                state = state,
-                contentPadding =padding,
-
-                ) {
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+            ) {
 
                 if (!errorMessage.isNullOrEmpty()) {
                     item {
-                        Spacer(modifier = Modifier.size(12.dp))
-                        FeedBackCard(
-                            errorMessage = errorMessage,
-                        )
-                        Spacer(modifier = Modifier.size(12.dp))
+                        Spacer(Modifier.size(12.dp))
+                        FeedBackCard(errorMessage)
+                        Spacer(Modifier.size(12.dp))
                     }
                 }
-                items(posts) { post ->
+
+                items(postEntities) { post ->
                     PostCard(
                         post = post,
                         onCardClick = onCardClick,
+                        onFavoriteClick = { onFavoriteClick(post) }
                     )
-                    Spacer(modifier = Modifier.size(8.dp))
+                    Spacer(Modifier.size(8.dp))
                 }
             }
         }
     }
 }
+
+@Composable
+private fun GetStringResource(){
+
+}
+
+
 
 
 

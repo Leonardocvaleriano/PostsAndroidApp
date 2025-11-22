@@ -5,7 +5,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.codeplace.postsandroidapp.core.presentation.components.IconAction
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
-import com.codeplace.postsandroidapp.feature_explore.presentation.explore.previews.mockPostCard
+import com.codeplace.postsandroidapp.feature_explore.presentation.explore.previews.mockPostEntityCard
 import com.example.compose.PostsAndroidAppTheme
 
 
@@ -39,15 +38,17 @@ fun PosdCardPreview() {
     PostsAndroidAppTheme {
         Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
             PostCard(
-                post = mockPostCard,
+                post = mockPostEntityCard,
                 onCardClick = {},
-                showFavoriteIcon = true
+                showFavoriteIcon = true,
+                onFavoriteClick = {}
 
 
             )
             PostCard(
-                post = mockPostCard,
+                post = mockPostEntityCard,
                 onCardClick = {},
+                onFavoriteClick = {}
 
                 )
         }
@@ -61,7 +62,8 @@ fun PostCard(
     modifier: Modifier = Modifier,
     post: Post,
     onCardClick: (postId: Int) -> Unit,
-    showFavoriteIcon: Boolean = true
+    showFavoriteIcon: Boolean = true,
+    onFavoriteClick:(post: Post) -> Unit
 ) {
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -107,7 +109,9 @@ fun PostCard(
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 },
-                                onClick = {}
+                                onClick = {
+                                    onFavoriteClick(post)
+                                }
 
                             )
                         }

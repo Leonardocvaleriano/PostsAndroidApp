@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.codeplace.postsandroidapp.PostsAndroidApp
 import com.codeplace.postsandroidapp.core.domain.onError
 import com.codeplace.postsandroidapp.core.domain.onSuccess
+import com.codeplace.postsandroidapp.core.presentation.screens.toUiText
 import com.codeplace.postsandroidapp.core.presentation.util.UiText
 import com.codeplace.postsandroidapp.feature_settings.domain.AppTheme
 import com.codeplace.postsandroidapp.feature_settings.domain.use_case.GetAppThemeUseCase

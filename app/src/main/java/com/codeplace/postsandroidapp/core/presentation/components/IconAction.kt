@@ -69,7 +69,7 @@ fun IconAction(
 
 
     val backgroundColor by animateColorAsState(
-        targetValue = if (isPressed) MaterialTheme.colorScheme.surfaceContainerHigh else if (showBackground){
+        targetValue = if (isPressed) MaterialTheme.colorScheme.surfaceContainerHighest else if (showBackground){
             MaterialTheme.colorScheme.surfaceContainer
         } else { Color.Unspecified},
         label = "backgroundIconActionColor"
@@ -77,13 +77,14 @@ fun IconAction(
 
     Box(
         modifier = modifier
-            .clickable{
-                onClick()
-            }
             .clip(CircleShape)
+            .clickable(
+                onClick = { onClick() })
+            .size(48.dp)
             .background(backgroundColor)
-            .size(48.dp),
-        contentAlignment = Alignment.Center
+            ,
+        contentAlignment = Alignment.Center,
+
 
     ){
         iconElement()

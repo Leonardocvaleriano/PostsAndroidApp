@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.codeplace.postsandroidapp.R
 import com.codeplace.postsandroidapp.core.presentation.components.DefaultTopAppBar
 import com.example.compose.PostsAndroidAppTheme
@@ -38,38 +39,31 @@ fun SettingsScreenRoot(
     onThemeClick: () -> Unit = {},
 ) {
 
-
-    Scaffold(
-        topBar = {
-            DefaultTopAppBar(
-
-                content = {
-                    Text(
-                        stringResource(R.string.top_bar_title_settings)
-
-                    )
-                }
-            )
-
-        }
-
-    ) { innerPadding ->
-
-        Column(modifier = Modifier.padding(innerPadding)) {
-            SettingsScreen(
-                onThemeClick = onThemeClick
-            )
-        }
-    }
+    SettingsScreen(
+        onThemeClick = onThemeClick
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     onThemeClick: () -> Unit,
 ) {
     Column(modifier = Modifier
         .fillMaxSize()
+        .padding(top = 32.dp)
     ) {
+        DefaultTopAppBar(
+            content = {
+                Text(
+                    style = MaterialTheme.typography.headlineMedium,
+                    text = stringResource(R.string.top_bar_title_settings)
+
+                )
+            }
+        )
+
+
         ListItem(
             modifier = Modifier
                 .clickable { onThemeClick() },

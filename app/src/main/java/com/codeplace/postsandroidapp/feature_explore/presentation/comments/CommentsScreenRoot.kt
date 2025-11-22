@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.codeplace.postsandroidapp.R
 import com.codeplace.postsandroidapp.core.presentation.components.DefaultTopAppBar
+import com.codeplace.postsandroidapp.core.presentation.components.IconAction
 import com.codeplace.postsandroidapp.core.presentation.screens.FeedBackCard
 import com.codeplace.postsandroidapp.core.presentation.theme.SpacingSize
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Comment
@@ -49,12 +50,12 @@ import com.example.compose.PostsAndroidAppTheme
 @Composable
 fun CommentsScreenRoot(
     onBackClick: () -> Unit = {},
-    viewModel: CommentsViewModel = hiltViewModel(),
+    viewModel: CommentsViewModel = androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel<CommentsViewModel>()
 ) {
 
     val isLoading by viewModel.isLoading.collectAsState()
     val comments by viewModel.commentsUiState.collectAsState()
-    val post by viewModel.post.collectAsState()
+    val post by viewModel.postEntity.collectAsState()
     val errorPost by viewModel.errorPost.collectAsState()
     val errorComments by viewModel.errorComments.collectAsState()
 
@@ -63,24 +64,24 @@ fun CommentsScreenRoot(
         topBar = {
             DefaultTopAppBar(
                 navigationElement = {
-                    Icon(
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                            .clickable {
-                                onBackClick()
+                    IconAction(
+                        onClick = {
+                            onBackClick()
+                        },
+                        iconElement = {
+                            Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                        )
+                    },
 
-                            },
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Search Icon",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                        )
                 },
                 content = {
                     Text(
                         text =stringResource(R.string.title_comments),
                         style = MaterialTheme.typography.bodyLargeEmphasized,
                         fontWeight = FontWeight.SemiBold
-
                     )
                 },
             )
@@ -103,7 +104,7 @@ fun CommentsScreenRoot(
             } else {
                 CommentsScreen(
                     comments = comments,
-                    post = post,
+                    postEntity = post,
                     errorPost = errorPost,
                     errorComment = errorComments,
                 )
@@ -118,13 +119,13 @@ fun CommentsScreenRoot(
 @Composable
 fun CommentsScreen(
     modifier: Modifier = Modifier,
-    post: Post?,
+    postEntity: Post?,
     comments: List<Comment>? = emptyList(),
     onCardClick: (Int) -> Unit = {},
     errorPost: String = "",
     errorComment: String = "",
 
-) {
+    ) {
     LazyColumn(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surfaceContainerLowest)
@@ -150,12 +151,13 @@ fun CommentsScreen(
                 )
             }
         } else {
-            post?.let { post ->
+            postEntity?.let { post ->
                 item {
                     PostCard(
                         showFavoriteIcon = false,
                         post = post,
                         onCardClick = {},
+                        onFavoriteClick = {}
 
                     )
                     Spacer(
@@ -245,7 +247,7 @@ fun CommentsScreenPreview() {
                     body = "body"
                 )
             ),
-            post = Post(
+            postEntity = Post(
                 userId = 1,
                 id = 1,
                 title = "title",

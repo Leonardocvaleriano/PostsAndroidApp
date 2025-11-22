@@ -75,7 +75,6 @@ fun NavigationRoot() {
                 }
                 composable<ScreenRoutes.Comments> { backStackEntry ->
                     val commentsRoute: ScreenRoutes.Comments = backStackEntry.toRoute()
-                    // StandardScaffold()
                     CommentsScreenRoot(
                         onBackClick = {
                             navController.popBackStack()
@@ -85,7 +84,9 @@ fun NavigationRoot() {
                 }
 
                 composable<ScreenRoutes.Favorites> {
-                    FavoritesScreenRoot()
+                    FavoritesScreenRoot(
+                        bottomBarPadding = innerPaddings.calculateBottomPadding()
+                    )
                 }
 
                 composable<ScreenRoutes.Settings> {

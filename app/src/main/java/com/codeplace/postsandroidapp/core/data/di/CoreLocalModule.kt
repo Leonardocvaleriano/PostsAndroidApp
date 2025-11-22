@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.room.Room
+import com.codeplace.postsandroidapp.core.data.remote.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,12 +18,23 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 @Module
 @InstallIn(SingletonComponent::class)
-object LocalModule{
+object LocalModule {
     @Provides
     @Singleton
     fun providePreferencesDataStore(
-        @ApplicationContext context: Context): DataStore<Preferences>{
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> {
         return context.dataStore
     }
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java, "app_database"
+        ).build()
+    }
+
 
 }

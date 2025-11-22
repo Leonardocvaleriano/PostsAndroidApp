@@ -4,6 +4,8 @@ import com.codeplace.postsandroidapp.feature_explore.domain.repository.ExploreRe
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetCommentsUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostsUseCase
+import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetSavedPostUseCase
+import com.codeplace.postsandroidapp.feature_explore.domain.use_case.SavePostUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,6 +33,18 @@ object ExploreDomainModule {
     @Singleton
     fun provideCommentsUseCases(repository: ExploreRepository): GetCommentsUseCase{
         return GetCommentsUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetSavedPostUseCase(repository: ExploreRepository): GetSavedPostUseCase{
+        return GetSavedPostUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSavePostUseCase(repository: ExploreRepository): SavePostUseCase{
+        return SavePostUseCase(repository)
     }
 
 

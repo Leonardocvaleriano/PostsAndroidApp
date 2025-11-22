@@ -1,15 +1,22 @@
 package com.codeplace.postsandroidapp.feature_explore.presentation.explore
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codeplace.postsandroidapp.R
 import com.codeplace.postsandroidapp.core.domain.onError
 import com.codeplace.postsandroidapp.core.domain.onSuccess
+import com.codeplace.postsandroidapp.core.presentation.util.UiText
 import com.codeplace.postsandroidapp.feature_explore.domain.models.Post
 import com.codeplace.postsandroidapp.feature_explore.domain.models.SearchHistory
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetPostsUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.GetRecentWordSearchesUseCase
+import com.codeplace.postsandroidapp.feature_explore.domain.use_case.SavePostUseCase
 import com.codeplace.postsandroidapp.feature_explore.domain.use_case.SaveRecentPostSearchesUseCase
+import com.codeplace.postsandroidapp.core.presentation.screens.toUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,9 +27,12 @@ import javax.inject.Inject
 class ExploreViewModel @Inject constructor(
     val getPostsUseCase: GetPostsUseCase,
     val saveRecentSearch: SaveRecentPostSearchesUseCase,
-    val getSavedSearchHistory: GetRecentWordSearchesUseCase
+    val getSavedSearchHistory: GetRecentWordSearchesUseCase,
+    val savePostUseCase: SavePostUseCase
 ) : ViewModel() {
 
+    private val _uiEvent = MutableSharedFlow<ExploreUiEvent>()
+    val uiEvent = _uiEvent
 
     companion object {
         private const val MAX_RECENT_SEARCHES = 5
@@ -38,17 +48,29 @@ class ExploreViewModel @Inject constructor(
     private val _posts = MutableStateFlow(emptyList<Post>())
     val posts: StateFlow<List<Post>> = _posts.asStateFlow()
 
-    private val _errorMessage = MutableStateFlow("")
-    val errorMessage: StateFlow<String> = _errorMessage.asStateFlow()
+    private val _errorMessage = MutableStateFlow<UiText>(UiText.DynamicString(""))
+    val errorMessage: StateFlow<UiText> = _errorMessage.asStateFlow()
 
-    private var fullPostList: List<Post> = emptyList()
+    private var fullPostEntityList: List<Post> = emptyList()
 
     private val _recentSearches = MutableStateFlow<List<String>>(emptyList())
     val recentSearches = _recentSearches.asStateFlow()
 
+
+    fun savePost(post: Post) = viewModelScope.launch(Dispatchers.IO) {
+
+        savePostUseCase.invoke(post)
+            .onSuccess {
+                _uiEvent.emit(ExploreUiEvent.ShowSnackBar(messsage = UiText.StringResourceId(R.string.post_successfully_saved)))
+            }
+            .onError { errorMessage ->
+                _uiEvent.emit(ExploreUiEvent.ShowSnackBar(messsage = errorMessage.toUiText()))
+            }
+    }
+
     fun onSearch(query: String) {
 
-        if (query.isBlank() || query.isEmpty()){
+        if (query.isBlank() || query.isEmpty()) {
             loadPosts()
         }
         saveQueryToHistory(query = query)
@@ -57,7 +79,7 @@ class ExploreViewModel @Inject constructor(
 
     private fun saveQueryToHistory(query: String) {
         if (query.isEmpty() || query.isBlank()) return
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val current = _recentSearches.value.toMutableList()
             current.remove(query)
             current.add(0, query)
@@ -78,12 +100,13 @@ class ExploreViewModel @Inject constructor(
     }
 
 
-    fun loadRecentPostSearches() = viewModelScope.launch {
+    fun loadRecentPostSearches() = viewModelScope.launch(Dispatchers.IO) {
         _isSearchContentLoading.value = true
         getSavedSearchHistory.invoke()
             .onSuccess { history ->
                 _recentSearches.value = history.recentPostSearches
-                _isSearchContentLoading.value = false            }
+                _isSearchContentLoading.value = false
+            }
             .onError { error ->
                 _isSearchContentLoading.value = false
             }
@@ -91,24 +114,24 @@ class ExploreViewModel @Inject constructor(
 
 
     private fun filterPosts(query: String) {
-        val filteredPosts = fullPostList.filter { post ->
-                post.title.contains(query, ignoreCase = true) ||
-                        post.body.contains(query, ignoreCase = true)
-            }
+        val filteredPosts = fullPostEntityList.filter { post ->
+            post.title.contains(query, ignoreCase = true) ||
+                    post.body.contains(query, ignoreCase = true)
+        }
         _posts.value = filteredPosts
 
     }
 
-    fun loadPosts() = viewModelScope.launch {
+    fun loadPosts() = viewModelScope.launch(Dispatchers.IO) {
         _isLoading.value = true
         getPostsUseCase()
             .onSuccess { posts ->
-                fullPostList = posts
+                fullPostEntityList = posts
                 _posts.value = posts
                 _isLoading.value = false
             }
             .onError { error ->
-                _errorMessage.value = error.name
+                _errorMessage.value = error.toUiText()
                 _isLoading.value = false
             }
 

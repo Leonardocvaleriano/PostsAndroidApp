@@ -1,7 +1,7 @@
-package com.codeplace.postsandroidapp.feature_explore.data.local
+package com.codeplace.postsandroidapp.feature_explore.data.local.datastore
 
 import androidx.datastore.core.Serializer
-import com.codeplace.postsandroidapp.feature_explore.data.local.entity.SearchHistoryEntity
+import com.codeplace.postsandroidapp.feature_explore.data.local.datastore.entity.SearchHistoryEntity
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import java.io.InputStream

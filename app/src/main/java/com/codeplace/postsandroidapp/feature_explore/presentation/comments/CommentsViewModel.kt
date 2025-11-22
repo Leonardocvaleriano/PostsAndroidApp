@@ -28,8 +28,8 @@ class CommentsViewModel @Inject constructor(
 
     val commentsUiState: StateFlow<List<Comment>?> = _commentsUiState.asStateFlow()
 
-    private val _post = MutableStateFlow<Post?>(null)
-    val post: StateFlow<Post?> = _post.asStateFlow()
+    private val _postEntity = MutableStateFlow<Post?>(null)
+    val postEntity: StateFlow<Post?> = _postEntity.asStateFlow()
 
     private val _errorPost = MutableStateFlow<String>("")
     val errorPost: StateFlow<String> = _errorPost.asStateFlow()
@@ -59,7 +59,7 @@ class CommentsViewModel @Inject constructor(
 
             when (post) {
                 is Result.Success -> {
-                    _post.value = post.data as Post
+                    _postEntity.value = post.data as Post
                 }
                 is Result.Error -> {
                     _errorComments.value = post.error.name
