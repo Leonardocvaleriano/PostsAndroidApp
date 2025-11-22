@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -58,7 +56,6 @@ fun CommentsScreenRoot(
     val errorComments by viewModel.errorComments.collectAsState()
 
     Scaffold(
-        contentWindowInsets = WindowInsets.systemBars,
         topBar = {
             DefaultTopAppBar(
                 navigationElement = {
@@ -102,7 +99,7 @@ fun CommentsScreenRoot(
             } else {
                 CommentsScreen(
                     comments = comments,
-                    postEntity = post,
+                    posts = post,
                     errorPost = errorPost,
                     errorComment = errorComments,
                 )
@@ -117,7 +114,7 @@ fun CommentsScreenRoot(
 @Composable
 fun CommentsScreen(
     modifier: Modifier = Modifier,
-    postEntity: Post?,
+    posts: Post?,
     comments: List<Comment>? = emptyList(),
     onCardClick: (Int) -> Unit = {},
     errorPost: String = "",
@@ -127,6 +124,7 @@ fun CommentsScreen(
     LazyColumn(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+            .padding(bottom = 12.dp)
             .fillMaxSize(),
     verticalArrangement = Arrangement.spacedBy(SpacingSize.small)
     ) {
@@ -149,14 +147,13 @@ fun CommentsScreen(
                 )
             }
         } else {
-            postEntity?.let { post ->
+            posts?.let { post ->
                 item {
                     PostCard(
                         showFavoriteIcon = false,
                         post = post,
                         onCardClick = {},
                         onFavoriteClick = {},
-
                     )
                     Spacer(
                         modifier = Modifier
@@ -245,7 +242,7 @@ fun CommentsScreenPreview() {
                     body = "body"
                 )
             ),
-            postEntity = Post(
+            posts = Post(
                 userId = 1,
                 id = 1,
                 title = "title",

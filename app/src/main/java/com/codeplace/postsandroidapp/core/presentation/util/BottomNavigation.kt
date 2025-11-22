@@ -24,7 +24,7 @@ enum class BottomNavigation(
         route = ScreenRoutes.Explore
     ),
     FAVORITES(
-        label = R.string.favourites,
+        label = R.string.Favourites,
         iconFilled = Icons.Filled.Favorite,
         iconOutlined = Icons.Outlined.FavoriteBorder,
         ScreenRoutes.Favourites

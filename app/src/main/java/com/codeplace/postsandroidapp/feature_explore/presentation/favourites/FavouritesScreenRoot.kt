@@ -84,7 +84,7 @@ private fun FavoritesScreen(
                 content = {
                     Text(
                         style = MaterialTheme.typography.headlineMedium,
-                       text = stringResource(R.string.favourites)
+                       text = stringResource(R.string.Favourites)
 
                     )
                 }
